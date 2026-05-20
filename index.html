@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LUCA · Sauna & IJsbaden Amsterdam</title>
+<meta name="description" content="LUCA is boutique wellness aan het water op het Cruquiuseiland. Sauna, ijsbaden, massages en een warme huiskamer in Amsterdam-Oost.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:wght@300;400;500&family=Marcellus&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ─────────────────────────────  NAV  ───────────────────────────── -->
+<nav class="nav" data-screen-label="Nav">
+  <a class="nav__logo" href="index.html">LUCA</a>
+  <ul class="nav__links">
+    <li><a href="voorzieningen.html" data-i18n="nav.facilities">Voorzieningen</a></li>
+    <li><a href="prijzen.html" data-i18n="nav.prices">Prijzen</a></li>
+    <li><a href="over-luca.html" data-i18n="nav.about">Over LUCA</a></li>
+    <li><a href="locatie.html" data-i18n="nav.visit">Bezoek</a></li>
+  </ul>
+  <div class="nav__right">
+    <div class="lang-toggle">
+      <button type="button" data-lang="nl" class="is-active" aria-label="Nederlands">🇳🇱</button>
+      <span class="lang-toggle__divider">·</span>
+      <button type="button" data-lang="en" aria-label="English">🇬🇧</button>
+    </div>
+    <a class="nav__book" href="reserve.html" data-i18n="nav.book">Boek nu</a>
+  </div>
+</nav>
+
+<!-- ─────────────────────────────  HERO  ───────────────────────────── -->
+<header class="hero" data-screen-label="01 Hero">
+  <div class="hero__motion">
+    <img class="hero__motion-img" src="assets/hero_compressed.gif" alt="" aria-hidden="true">
+    <div class="hero__motion-layer hero__motion-layer--a"></div>
+    <div class="hero__motion-layer hero__motion-layer--b"></div>
+    <div class="hero__motion-layer hero__motion-layer--c"></div>
+  </div>
+  <div class="hero__veil"></div>
+  <div class="hero__grain"></div>
+  <div class="particles" data-particles="hero" data-count="35"></div>
+
+  <div class="hero__content">
+    <div class="hero__eyebrow" data-i18n="hero.eyebrow">Sauna · IJsbaden · Massages — Amsterdam-Oost</div>
+    <h1 class="hero__title">
+      <span class="word" data-i18n="hero.t1">Boutique</span>
+      <span class="word" data-i18n="hero.t2">wellness</span>
+      <span class="word word--gold" data-i18n="hero.t3">aan het</span>
+      <span class="word" data-i18n="hero.t4">water.</span>
+    </h1>
+    <p class="hero__sub" data-i18n="hero.sub">
+      Sauna, ijsbad, massage en een warme huiskamer — op het Cruquiuseiland in Amsterdam-Oost.
+    </p>
+    <a href="reserve.html" class="hero__cta">
+      <span data-i18n="hero.cta">Reserveer een sessie</span>
+      <span class="hero__cta-arrow" aria-hidden>→</span>
+    </a>
+    <p class="hero__cta-aux" data-i18n="hero.cta.aux">Tot 24u gratis annuleren · Spontaan ook welkom</p>
+  </div>
+
+  <div class="hero__meta">
+    <div class="hero__meta-block">
+      <span data-i18n="hero.coord">52.3735° N · 4.9486° E</span>
+      <strong data-i18n="hero.address">LUCA Amsterdam — Zeeburgerkade</strong>
+    </div>
+    <div class="hero__scroll">
+      <span data-i18n="hero.scroll">Scroll</span>
+      <div class="hero__scroll-line"></div>
+    </div>
+    <div class="hero__meta-block" style="text-align:right;">
+      <span data-i18n="hero.est">Sinds 2024</span>
+      <strong data-i18n="hero.spontaan">Spontaan welkom</strong>
+    </div>
+  </div>
+</header>
+
+<!-- ─────────────────────────────  EXPERIENCES  ───────────────────────────── -->
+<section class="section experiences" id="experiences" data-screen-label="02 Experiences">
+  <div class="section__head">
+    <div>
+      <div class="section__kicker reveal" data-delay="1" data-i18n="exp.kicker">Voorzieningen</div>
+      <h2 class="section__title reveal" data-delay="2">
+        <span data-i18n="exp.title.a">Opwarmen,</span> <em data-i18n="exp.title.em">afkoelen,</em> <span data-i18n="exp.title.b">opladen.</span>
+      </h2>
+    </div>
+    <p class="section__lede reveal" data-delay="3" data-i18n="exp.lede">
+      Drie ruimtes, één ritueel. Geniet van onze sauna en ijsbaden, kies een massage, of gewoon een sapje aan de bar. Badkleding verplicht.
+    </p>
+  </div>
+
+  <div class="experience-grid">
+
+    <a href="reserve.html?service=sauna" class="exp-card exp-card--sauna reveal" data-delay="1">
+      <div class="exp-card__motion" style="background-image:url('assets/card-sauna.png'); background-size:cover; background-position:center;"></div>
+      <div class="exp-card__motion-layer" style="background: radial-gradient(ellipse at 30% 70%, rgba(255,140,50,0.3), transparent 65%), radial-gradient(ellipse at 70% 40%, rgba(201,168,108,0.25), transparent 70%); animation: ember 18s cubic-bezier(0.22,0.61,0.36,1) infinite alternate; inset: -20%; background-repeat: no-repeat; filter: blur(28px); mix-blend-mode: screen; opacity: 0.6; will-change: transform;"></div>
+      <div class="exp-card__motion-layer" style="background: radial-gradient(circle at 50% 90%, rgba(255,90,20,0.2), transparent 60%); animation: ember 24s cubic-bezier(0.22,0.61,0.36,1) infinite alternate-reverse; inset: -20%; background-repeat: no-repeat; filter: blur(50px); opacity: 0.5; will-change: transform;"></div>
+      <div class="exp-card__veil"></div>
+      <div class="exp-card__grain"></div>
+      <div class="exp-card__steam particles" data-particles="card"></div>
+      <div class="exp-card__content">
+        <div class="exp-card__num" data-i18n="card.sauna.num">01 / Sauna & IJsbad</div>
+        <div class="exp-card__bottom">
+          <div class="exp-card__name">
+            <span data-i18n="card.sauna.name1">Sauna</span><br/>
+            <em style="font-style:italic;color:var(--gold);" data-i18n="card.sauna.name2">& IJsbad</em>
+          </div>
+          <div class="exp-card__meta">
+            <span data-i18n="card.sauna.meta">30 · 60 · 90 min · vanaf €19</span>
+            <span class="exp-card__cta">
+              <span data-i18n="card.cta">Boeken</span>
+              <span class="exp-card__cta-arrow"></span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </a>
+
+    <a href="reserve.html?service=massage" class="exp-card exp-card--massage reveal" data-delay="2">
+      <div class="exp-card__motion" style="background-image:url('assets/card-massage.png'); background-size:cover; background-position:center;"></div>
+      <div class="exp-card__motion-layer" style="background: radial-gradient(ellipse at 30% 60%, rgba(220,140,110,0.25), transparent 65%), radial-gradient(ellipse at 70% 30%, rgba(201,168,108,0.2), transparent 70%); animation: ember 22s cubic-bezier(0.22,0.61,0.36,1) infinite alternate; inset: -20%; background-repeat: no-repeat; filter: blur(28px); mix-blend-mode: screen; opacity: 0.6; will-change: transform;"></div>
+      <div class="exp-card__motion-layer" style="background: radial-gradient(circle at 50% 50%, rgba(220,130,90,0.15), transparent 60%); animation: ember 30s cubic-bezier(0.22,0.61,0.36,1) infinite alternate-reverse; inset: -20%; background-repeat: no-repeat; filter: blur(50px); opacity: 0.4; will-change: transform;"></div>
+      <div class="exp-card__veil"></div>
+      <div class="exp-card__grain"></div>
+      <div class="exp-card__steam particles" data-particles="card"></div>
+      <div class="exp-card__content">
+        <div class="exp-card__num" data-i18n="card.massage.num">02 / Massages</div>
+        <div class="exp-card__bottom">
+          <div class="exp-card__name">
+            <span data-i18n="card.massage.name1">Massa-</span><br/>
+            <em style="font-style:italic;color:var(--gold);" data-i18n="card.massage.name2">ges</em>
+          </div>
+          <div class="exp-card__meta">
+            <span data-i18n="card.massage.meta">30 · 60 · 90 min · vanaf €50</span>
+            <span class="exp-card__cta">
+              <span data-i18n="card.cta">Boeken</span>
+              <span class="exp-card__cta-arrow"></span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </a>
+
+    <a href="reserve.html?service=prive" class="exp-card exp-card--prive reveal" data-delay="3">
+      <div class="exp-card__motion" style="background-image:url('assets/card-prive.png'); background-size:cover; background-position:center;"></div>
+      <div class="exp-card__motion-layer" style="background: radial-gradient(ellipse at 70% 30%, rgba(246,243,236,0.3), transparent 60%), radial-gradient(ellipse at 30% 70%, rgba(201,168,108,0.3), transparent 70%); animation: daylight 28s cubic-bezier(0.22,0.61,0.36,1) infinite alternate; inset: -20%; background-repeat: no-repeat; filter: blur(28px); mix-blend-mode: screen; opacity: 0.6; will-change: transform;"></div>
+      <div class="exp-card__motion-layer" style="background: radial-gradient(circle at 50% 20%, rgba(246,243,236,0.25), transparent 65%); animation: daylight 36s cubic-bezier(0.22,0.61,0.36,1) infinite alternate-reverse; inset: -20%; background-repeat: no-repeat; filter: blur(50px); opacity: 0.5; will-change: transform;"></div>
+      <div class="exp-card__veil"></div>
+      <div class="exp-card__grain"></div>
+      <div class="exp-card__steam particles" data-particles="card"></div>
+      <div class="exp-card__content">
+        <div class="exp-card__num" data-i18n="card.prive.num">03 / LUCA Privé</div>
+        <div class="exp-card__bottom">
+          <div class="exp-card__name">
+            <span data-i18n="card.prive.name1">LUCA</span><br/>
+            <em style="font-style:italic;color:var(--gold);" data-i18n="card.prive.name2">Privé</em>
+          </div>
+          <div class="exp-card__meta">
+            <span data-i18n="card.prive.meta">2-6 personen · vanaf €89,95</span>
+            <span class="exp-card__cta">
+              <span data-i18n="card.cta">Boeken</span>
+              <span class="exp-card__cta-arrow"></span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </a>
+
+  </div>
+</section>
+
+<!-- ─────────────────────────────  RITUAL  ───────────────────────────── -->
+<section class="section ritual" id="ritual" data-screen-label="03 Ritual">
+  <div class="ritual__inner">
+
+    <div class="ritual__media">
+      <div class="exp-card__motion" style="background: radial-gradient(ellipse at 50% 60%, #3a2820 0%, #1a120c 50%, #0a0604 100%);">
+        <div style="position:absolute;inset:-20%;background:radial-gradient(ellipse at 40% 50%, rgba(201,168,108,0.45), transparent 60%), radial-gradient(ellipse at 70% 70%, rgba(246,243,236,0.2), transparent 60%);animation:ember 30s cubic-bezier(0.22,0.61,0.36,1) infinite alternate;filter:blur(28px);mix-blend-mode:screen;opacity:0.6;will-change:transform;"></div>
+      </div>
+      <div class="exp-card__veil"></div>
+      <div class="exp-card__grain"></div>
+      <div class="exp-card__steam particles" data-particles="card"></div>
+    </div>
+
+    <div>
+      <div class="section__kicker reveal" data-delay="1" data-i18n="rit.kicker">Het ritueel</div>
+      <h2 class="section__title reveal" data-delay="2" style="margin-bottom: 48px;">
+        <span data-i18n="rit.title.a">Warm.</span> <em data-i18n="rit.title.em">Koud.</em><br/><span data-i18n="rit.title.b">Rust. Herhaal.</span>
+      </h2>
+
+      <ol class="ritual__list">
+        <li class="ritual__item reveal" data-delay="1">
+          <span class="ritual__num">I.</span>
+          <div>
+            <div class="ritual__name" data-i18n="rit.1.name">Warmte</div>
+            <p class="ritual__desc" data-i18n="rit.1.desc">Twaalf minuten in de sauna. Laat je adem zakken, laat je schouders los.</p>
+          </div>
+        </li>
+        <li class="ritual__item reveal" data-delay="2">
+          <span class="ritual__num">II.</span>
+          <div>
+            <div class="ritual__name" data-i18n="rit.2.name">Koud</div>
+            <p class="ritual__desc" data-i18n="rit.2.desc">Drie minuten in het ijsbad. Scherper dan taal. Schoner dan gedachte.</p>
+          </div>
+        </li>
+        <li class="ritual__item reveal" data-delay="3">
+          <span class="ritual__num">III.</span>
+          <div>
+            <div class="ritual__name" data-i18n="rit.3.name">Rust</div>
+            <p class="ritual__desc" data-i18n="rit.3.desc">Twintig minuten in de huiskamer. Een sapje aan de bar, het raam open naar het water.</p>
+          </div>
+        </li>
+        <li class="ritual__item reveal" data-delay="4">
+          <span class="ritual__num">IV.</span>
+          <div>
+            <div class="ritual__name" data-i18n="rit.4.name">Herhaal</div>
+            <p class="ritual__desc" data-i18n="rit.4.desc">Drie rondes is de praktijk. De vierde is helemaal van jou.</p>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────  PHILOSOPHY  ───────────────────────────── -->
+<section class="section philosophy" id="philosophy" data-screen-label="04 Philosophy">
+  <div class="particles" data-particles="card" style="opacity:.5;"></div>
+  <blockquote class="philosophy__quote reveal">
+    <span data-i18n="phil.q1">"Wie zijn hoofd koel houdt,</span><br/>
+    <em data-i18n="phil.q2">zit waarschijnlijk</em><br/>
+    <span data-i18n="phil.q3">bij LUCA."</span>
+  </blockquote>
+  <div class="philosophy__attribution reveal" data-delay="2" data-i18n="phil.attr">— Huisspreuk · LUCA Amsterdam</div>
+</section>
+
+<!-- ─────────────────────────────  VISIT  ───────────────────────────── -->
+<section class="section visit" id="visit" data-screen-label="05 Visit">
+  <div class="section__head">
+    <div>
+      <div class="section__kicker reveal" data-delay="1" data-i18n="visit.kicker">Bezoek</div>
+      <h2 class="section__title reveal" data-delay="2">
+        <span data-i18n="visit.title.a">Zeeburgerkade</span><br/><em data-i18n="visit.title.em">1314</em><span data-i18n="visit.title.b">, Cruquiuseiland.</span>
+      </h2>
+    </div>
+    <p class="section__lede reveal" data-delay="3" data-i18n="visit.lede">
+      Aan het water op het Cruquiuseiland in Amsterdam-Oost. Boek vooraf, of kom gewoon langs — spontane sessies zijn ook welkom.
+    </p>
+  </div>
+
+  <div class="visit__grid">
+    <div class="visit__media">
+      <div class="exp-card__motion" style="background: radial-gradient(ellipse at 60% 40%, #2a2018 0%, #14100c 50%, #050402 100%);">
+        <div style="position:absolute;inset:-20%;background:radial-gradient(ellipse at 50% 60%, rgba(246,243,236,0.3), transparent 60%), radial-gradient(ellipse at 30% 30%, rgba(201,168,108,0.3), transparent 60%);animation:daylight 40s cubic-bezier(0.22,0.61,0.36,1) infinite alternate;filter:blur(28px);mix-blend-mode:screen;opacity:0.6;will-change:transform;"></div>
+      </div>
+      <div class="exp-card__veil"></div>
+      <div class="exp-card__grain"></div>
+      <div class="exp-card__steam particles" data-particles="card"></div>
+    </div>
+
+    <div class="visit__info">
+      <div class="visit__detail reveal" data-delay="1">
+        <div class="visit__detail-label" data-i18n="visit.addr.lbl">Adres</div>
+        <div class="visit__detail-value">Zeeburgerkade 1314-1316<br/>1019 VK Amsterdam</div>
+      </div>
+      <div class="visit__detail reveal" data-delay="2">
+        <div class="visit__detail-label" data-i18n="visit.hrs.lbl">Openingstijden</div>
+        <div class="visit__detail-value" data-i18n="visit.hrs.a">Ma — Vr · 09:00 — 21:00</div>
+        <div class="visit__detail-aux" data-i18n="visit.hrs.b">Za — Zo · 10:00 — 19:00</div>
+      </div>
+      <div class="visit__detail reveal" data-delay="3">
+        <div class="visit__detail-label" data-i18n="visit.tel.lbl">Reserveren</div>
+        <div class="visit__detail-value" data-i18n="visit.tel">020 362 1278</div>
+        <div class="visit__detail-aux" data-i18n="visit.mail">info@luca-amsterdam.nl</div>
+      </div>
+      <a class="visit__cta reveal" data-delay="4" href="reserve.html"><span data-i18n="visit.cta">Reserveer een sessie</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────  FOOTER  ───────────────────────────── -->
+<footer class="footer" data-screen-label="Footer">
+  <div class="footer__top">
+    <div>
+      <div class="footer__logo">LUCA</div>
+      <p class="footer__tag" data-i18n="foot.tag">Boutique wellness aan het water. Amsterdam, sinds 2024.</p>
+    </div>
+    <div class="footer__col">
+      <h4 data-i18n="foot.h.exp">Beleving</h4>
+      <ul>
+        <li><a href="reserve.html?service=sauna" data-i18n="foot.exp.1">Sauna & IJsbad</a></li>
+        <li><a href="reserve.html?service=massage" data-i18n="foot.exp.2">Massages</a></li>
+        <li><a href="reserve.html?service=prive" data-i18n="foot.exp.3">LUCA Privé</a></li>
+        <li><a href="prijzen.html" data-i18n="foot.exp.4">Memberships</a></li>
+      </ul>
+    </div>
+    <div class="footer__col">
+      <h4 data-i18n="foot.h.house">Huis</h4>
+      <ul>
+        <li><a href="over-luca.html" data-i18n="foot.house.1">Over LUCA</a></li>
+        <li><a href="locatie.html" data-i18n="foot.house.2">Locatie & openingstijden</a></li>
+        <li><a href="faq.html" data-i18n="foot.house.3">Veelgestelde vragen</a></li>
+        <li><a href="huisregels.html" data-i18n="foot.house.4">Huisregels</a></li>
+      </ul>
+    </div>
+    <div class="footer__col">
+      <h4 data-i18n="foot.h.reach">Contact</h4>
+      <ul>
+        <li><a href="mailto:info@luca-amsterdam.nl" data-i18n="foot.reach.1">info@luca-amsterdam.nl</a></li>
+        <li><a href="tel:+31203621278" data-i18n="foot.reach.2">020 362 1278</a></li>
+        <li><a href="https://www.instagram.com/amsterdam.luca/" data-i18n="foot.reach.3">Instagram</a></li>
+        <li><a href="#" data-i18n="foot.reach.4">Nieuwsbrief</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer__bottom">
+    <span data-i18n="foot.copy">© MMXXVI · LUCA Amsterdam</span>
+    <span data-i18n="foot.place">Aan het Cruquiuseiland</span>
+  </div>
+</footer>
+
+<!-- ─────────────────────────────  FLOATING BOOK CTA  ───────────────────────────── -->
+<a href="reserve.html" class="fab" id="book-fab" aria-label="Reserveer een sessie">
+  <span class="fab__dot" aria-hidden></span>
+  <span data-i18n="fab.book">Boek nu</span>
+</a>
+
+<script src="i18n.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

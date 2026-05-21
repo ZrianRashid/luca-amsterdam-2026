@@ -17,48 +17,50 @@ const t = (key, lang) => (window.LucaI18n ? window.LucaI18n.t(key, lang) : key);
 
 // ─────────────────────────────  DATA  ─────────────────────────────
 
+// ── Real LUCA Amsterdam services from OnlineAfspraken ────────────────────────
 const SERVICES = [
+  // SAUNA & IJSBADEN
   {
-    id: 'sauna',
-    nameKey: 'r.svc.sauna.name',
-    descKey: 'r.svc.sauna.desc',
-    durations: [
-      { min: 30, price: 19 },
-      { min: 60, price: 27 },
-      { min: 90, price: 35 },
-    ],
+    id: 'sauna30',
+    nameKey: 'r.svc.sauna30.name',
+    descKey: 'r.svc.sauna30.desc',
+    durations: [{ min: 30, price: 19 }],
     requiresGuests: false,
   },
   {
-    id: 'massage',
-    nameKey: 'r.svc.massage.name',
-    descKey: 'r.svc.massage.desc',
-    durations: [
-      { min: 30, price: 50 },
-      { min: 60, price: 85 },
-      { min: 90, price: 110 },
-    ],
-    types: [
-      { id: 'ontspanning', labelKey: 'r.type.ontspanning' },
-      { id: 'meridiaan',   labelKey: 'r.type.meridiaan' },
-      { id: 'cupping',     labelKey: 'r.type.cupping' },
-      { id: 'madero',      labelKey: 'r.type.madero' },
-      { id: 'deep',        labelKey: 'r.type.deep', extra: 10 },
-    ],
+    id: 'sauna60',
+    nameKey: 'r.svc.sauna60.name',
+    descKey: 'r.svc.sauna60.desc',
+    durations: [{ min: 60, price: 27 }],
     requiresGuests: false,
   },
   {
-    id: 'prive',
-    nameKey: 'r.svc.prive.name',
-    descKey: 'r.svc.prive.desc',
-    durations: [
-      { min: 60, price: 89.95, from: true },
-      { min: 90, price: 130, from: true },
-      { min: 120, price: 170, from: true },
-    ],
+    id: 'sauna90',
+    nameKey: 'r.svc.sauna90.name',
+    descKey: 'r.svc.sauna90.desc',
+    durations: [{ min: 90, price: 35 }],
+    requiresGuests: false,
+  },
+  // LUCA PRIVÉ
+  {
+    id: 'privedate2',
+    nameKey: 'r.svc.privedate2.name',
+    descKey: 'r.svc.privedate2.desc',
+    durations: [{ min: 60, price: 89.95 }],
     requiresGuests: true,
-    maxGuests: 7,
+    maxGuests: 2,
+    noteKey: 'r.svc.privedate2.note',
   },
+  {
+    id: 'privedate46',
+    nameKey: 'r.svc.privedate46.name',
+    descKey: 'r.svc.privedate46.desc',
+    durations: [{ min: 60, price: 89.95 }],
+    requiresGuests: true,
+    maxGuests: 6,
+    noteKey: 'r.svc.privedate46.note',
+  },
+  // MASSAGES
   {
     id: 'buccal',
     nameKey: 'r.svc.buccal.name',
@@ -66,13 +68,214 @@ const SERVICES = [
     durations: [{ min: 30, price: 50 }],
     requiresGuests: false,
   },
+  {
+    id: 'relax30',
+    nameKey: 'r.svc.relax30.name',
+    descKey: 'r.svc.relax30.desc',
+    durations: [{ min: 30, price: 50 }],
+    requiresGuests: false,
+  },
+  {
+    id: 'deep30',
+    nameKey: 'r.svc.deep30.name',
+    descKey: 'r.svc.deep30.desc',
+    durations: [{ min: 30, price: 50 }],
+    requiresGuests: false,
+  },
+  {
+    id: 'relax60',
+    nameKey: 'r.svc.relax60.name',
+    descKey: 'r.svc.relax60.desc',
+    durations: [{ min: 60, price: 85 }],
+    requiresGuests: false,
+  },
+  {
+    id: 'deep60',
+    nameKey: 'r.svc.deep60.name',
+    descKey: 'r.svc.deep60.desc',
+    durations: [{ min: 60, price: 85 }],
+    requiresGuests: false,
+  },
+  {
+    id: 'relax90',
+    nameKey: 'r.svc.relax90.name',
+    descKey: 'r.svc.relax90.desc',
+    durations: [{ min: 90, price: 110 }],
+    requiresGuests: false,
+  },
+  {
+    id: 'deep90',
+    nameKey: 'r.svc.deep90.name',
+    descKey: 'r.svc.deep90.desc',
+    durations: [{ min: 90, price: 110 }],
+    requiresGuests: false,
+  },
+  {
+    id: 'cupping',
+    nameKey: 'r.svc.cupping.name',
+    descKey: 'r.svc.cupping.desc',
+    durations: [{ min: 30, price: 50 }],
+    requiresGuests: false,
+  },
+  // COMBI
+  {
+    id: 'combi30relax',
+    nameKey: 'r.svc.combi30relax.name',
+    descKey: 'r.svc.combi30relax.desc',
+    durations: [{ min: 60, price: 69 }],
+    requiresGuests: false,
+    comboParts: ['30min wellness', '30min relax massage'],
+  },
+  {
+    id: 'combi30deep',
+    nameKey: 'r.svc.combi30deep.name',
+    descKey: 'r.svc.combi30deep.desc',
+    durations: [{ min: 60, price: 69 }],
+    requiresGuests: false,
+    comboParts: ['30min wellness', '30min deep tissue massage'],
+  },
+  {
+    id: 'combi60relax',
+    nameKey: 'r.svc.combi60relax.name',
+    descKey: 'r.svc.combi60relax.desc',
+    durations: [{ min: 120, price: 104 }],
+    requiresGuests: false,
+    comboParts: ['60min wellness', '60min relax massage'],
+  },
+  {
+    id: 'combi60deep',
+    nameKey: 'r.svc.combi60deep.name',
+    descKey: 'r.svc.combi60deep.desc',
+    durations: [{ min: 120, price: 104 }],
+    requiresGuests: false,
+    comboParts: ['60min wellness', '60min deep tissue massage'],
+  },
+  {
+    id: 'combi30relax60',
+    nameKey: 'r.svc.combi30relax60.name',
+    descKey: 'r.svc.combi30relax60.desc',
+    durations: [{ min: 90, price: 89 }],
+    requiresGuests: false,
+    comboParts: ['30min wellness', '60min relax massage'],
+  },
+  {
+    id: 'combi30deep60',
+    nameKey: 'r.svc.combi30deep60.name',
+    descKey: 'r.svc.combi30deep60.desc',
+    durations: [{ min: 90, price: 89 }],
+    requiresGuests: false,
+    comboParts: ['30min wellness', '60min deep tissue massage'],
+  },
+  {
+    id: 'combi60relax30',
+    nameKey: 'r.svc.combi60relax30.name',
+    descKey: 'r.svc.combi60relax30.desc',
+    durations: [{ min: 90, price: 89 }],
+    requiresGuests: false,
+    comboParts: ['60min wellness', '30min relax massage'],
+  },
+  {
+    id: 'combi60deep30',
+    nameKey: 'r.svc.combi60deep30.name',
+    descKey: 'r.svc.combi60deep30.desc',
+    durations: [{ min: 90, price: 89 }],
+    requiresGuests: false,
+    comboParts: ['60min wellness', '30min deep tissue massage'],
+  },
+  {
+    id: 'combi30buccal',
+    nameKey: 'r.svc.combi30buccal.name',
+    descKey: 'r.svc.combi30buccal.desc',
+    durations: [{ min: 60, price: 69 }],
+    requiresGuests: false,
+    comboParts: ['30min wellness', '30min buccal massage'],
+  },
+  // IJSBAD ONLY
+  {
+    id: 'ijsbad',
+    nameKey: 'r.svc.ijsbad.name',
+    descKey: 'r.svc.ijsbad.desc',
+    durations: [{ min: 10, price: 12 }],
+    requiresGuests: false,
+  },
+  // MEN
+  {
+    id: 'menbeard',
+    nameKey: 'r.svc.menbeard.name',
+    descKey: 'r.svc.menbeard.desc',
+    durations: [{ min: 35, price: 75 }],
+    requiresGuests: false,
+  },
+  {
+    id: 'menhair',
+    nameKey: 'r.svc.menhair.name',
+    descKey: 'r.svc.menhair.desc',
+    durations: [{ min: 45, price: 85 }],
+    requiresGuests: false,
+  },
+  {
+    id: 'menfull',
+    nameKey: 'r.svc.menfull.name',
+    descKey: 'r.svc.menfull.desc',
+    durations: [{ min: 60, price: 110 }],
+    requiresGuests: false,
+  },
+  // STUDIO
+  {
+    id: 'studio1',
+    nameKey: 'r.svc.studio1.name',
+    descKey: 'r.svc.studio1.desc',
+    durations: [{ min: 60, price: 95 }],
+    requiresGuests: true,
+    maxGuests: 10,
+  },
+  {
+    id: 'studio2',
+    nameKey: 'r.svc.studio2.name',
+    descKey: 'r.svc.studio2.desc',
+    durations: [{ min: 120, price: 175 }],
+    requiresGuests: true,
+    maxGuests: 10,
+  },
+  {
+    id: 'studio3',
+    nameKey: 'r.svc.studio3.name',
+    descKey: 'r.svc.studio3.desc',
+    durations: [{ min: 180, price: 245 }],
+    requiresGuests: true,
+    maxGuests: 10,
+  },
+  {
+    id: 'studio4',
+    nameKey: 'r.svc.studio4.name',
+    descKey: 'r.svc.studio4.desc',
+    durations: [{ min: 240, price: 310 }],
+    requiresGuests: true,
+    maxGuests: 10,
+  },
+  {
+    id: 'studio5',
+    nameKey: 'r.svc.studio5.name',
+    descKey: 'r.svc.studio5.desc',
+    durations: [{ min: 480, price: 550 }],
+    requiresGuests: true,
+    maxGuests: 10,
+  },
 ];
 
 const ADDONS = [
-  { id: 'combo', nameKey: 'r.addon.combo.name', descKey: 'r.addon.combo.desc', price: 27, services: ['massage', 'buccal'] },
-  { id: 'tea',   nameKey: 'r.addon.tea.name',   descKey: 'r.addon.tea.desc',   price: 12, services: ['sauna','massage','prive','buccal'] },
-  { id: 'juice', nameKey: 'r.addon.juice.name', descKey: 'r.addon.juice.desc', price: 14, services: ['sauna','massage','prive','buccal'] },
-  { id: 'robe',  nameKey: 'r.addon.robe.name',  descKey: 'r.addon.robe.desc',  price: 18, services: ['sauna','massage','prive','buccal'] },
+  { id: 'tea',   nameKey: 'r.addon.tea.name',   descKey: 'r.addon.tea.desc',   price: 12, services: ['sauna30','sauna60','sauna90','privedate2','privedate46','relax30','deep30','relax60','deep60','relax90','deep90','cupping','buccal','combi30relax','combi30deep','combi60relax','combi60deep','combi30relax60','combi30deep60','combi60relax30','combi60deep30','combi30buccal','ijsbad','menbeard','menhair','menfull'] },
+  { id: 'juice', nameKey: 'r.addon.juice.name', descKey: 'r.addon.juice.desc', price: 14, services: ['sauna30','sauna60','sauna90','privedate2','privedate46','relax30','deep30','relax60','deep60','relax90','deep90','cupping','buccal','combi30relax','combi30deep','combi60relax','combi60deep','combi30relax60','combi30deep60','combi60relax30','combi60deep30','combi30buccal','ijsbad','menbeard','menhair','menfull'] },
+  { id: 'robe',  nameKey: 'r.addon.robe.name',  descKey: 'r.addon.robe.desc',  price: 18, services: ['sauna30','sauna60','sauna90','privedate2','privedate46','relax30','deep30','relax60','deep60','relax90','deep90','cupping','buccal','combi30relax','combi30deep','combi60relax','combi60deep','combi30relax60','combi30deep60','combi60relax30','combi60deep30','combi30buccal','ijsbad','menbeard','menhair','menfull'] },
+];
+
+const SERVICE_CATEGORIES = [
+  { id: 'sauna',  labelKey: 'r.cat.sauna',  services: ['sauna30','sauna60','sauna90','ijsbad'] },
+  { id: 'prive',  labelKey: 'r.cat.prive',  services: ['privedate2','privedate46'] },
+  { id: 'massage',labelKey: 'r.cat.massage',services: ['buccal','relax30','deep30','relax60','deep60','relax90','deep90','cupping'] },
+  { id: 'combi',  labelKey: 'r.cat.combi',  services: ['combi30relax','combi30deep','combi60relax','combi60deep','combi30relax60','combi30deep60','combi60relax30','combi60deep30','combi30buccal'] },
+  { id: 'men',    labelKey: 'r.cat.men',    services: ['menbeard','menhair','menfull'] },
+  { id: 'studio', labelKey: 'r.cat.studio', services: ['studio1','studio2','studio3','studio4','studio5'] },
 ];
 
 const STEPS = ['r.step.1', 'r.step.2', 'r.step.3', 'r.step.4', 'r.step.5'];
@@ -328,6 +531,9 @@ function TrustStrip() {
 // ── Step 1: Service ──
 function StepService({ service, duration, massageType, onService, onDuration, onMassageType }) {
   const lang = useLang();
+
+  const selectedSvc = SERVICES.find(s => s.id === service);
+
   return (
     <div className="step__body">
       <div className="step__head">
@@ -339,70 +545,58 @@ function StepService({ service, duration, massageType, onService, onDuration, on
       </div>
 
       <div className="svc-list">
-        {SERVICES.map((s, i) => {
-          const selected = service === s.id;
-          const fromPrice = s.durations[0].price;
+        {SERVICE_CATEGORIES.map((cat) => {
+          const catServices = SERVICES.filter(s => cat.services.includes(s.id));
+          const catSelected = catServices.some(s => s.id === service);
           return (
-            <div key={s.id} className={`svc-card ${selected ? 'is-selected' : ''}`}>
-              <button
-                type="button"
-                className="svc-card__main"
-                onClick={() => onService(s.id)}
-              >
-                <span className="svc-card__mark"></span>
-                <span className="svc-card__num">0{i + 1}</span>
-                <span className="svc-card__body">
-                  <span className="svc-card__name">{t(s.nameKey, lang)}</span>
-                  <span className="svc-card__desc">{t(s.descKey, lang)}</span>
-                </span>
-                <span className="svc-card__price">
-                  {s.durations[0].from ? t('r.from', lang) + ' ' : ''}{fmtPrice(fromPrice, lang)}
-                  <small>{s.requiresGuests ? '' : t('r.from', lang)}</small>
-                </span>
+            <div key={cat.id} className={`svc-cat ${catSelected ? 'is-open' : ''}`}>
+              <button type="button" className="svc-cat__header" onClick={() => {
+                if (!catSelected) {
+                  onService(catServices[0].id);
+                  onDuration(catServices[0].durations[0]);
+                }
+              }}>
+                <span className="svc-cat__mark"></span>
+                <span className="svc-cat__name">{t(cat.labelKey, lang)}</span>
+                <span className="svc-cat__count">{catServices.length} opties</span>
               </button>
-
-              {selected && (
-                <div className="svc-card__opts">
-                  {s.durations.length > 1 && (
-                    <div className="svc-opt-group">
-                      <span className="svc-opt-label">{t('r.duration', lang)}</span>
-                      <div className="svc-opt-pills">
-                        {s.durations.map((d) => (
-                          <button
-                            key={d.min}
-                            type="button"
-                            className={`svc-pill ${duration?.min === d.min ? 'is-on' : ''}`}
-                            onClick={() => onDuration(d)}
-                          >
-                            {d.min} min · {d.from ? t('r.from', lang) + ' ' : ''}{fmtPrice(d.price, lang)}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                  {s.types && (
-                    <div className="svc-opt-group">
-                      <span className="svc-opt-label">{t('r.type', lang)}</span>
-                      <div className="svc-opt-pills">
-                        {s.types.map((ty) => (
-                          <button
-                            key={ty.id}
-                            type="button"
-                            className={`svc-pill ${massageType === ty.id ? 'is-on' : ''}`}
-                            onClick={() => onMassageType(ty.id)}
-                          >
-                            {t(ty.labelKey, lang)}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  )}
+              {catSelected && (
+                <div className="svc-cat__body">
+                  {catServices.map((s) => {
+                    const selected = service === s.id;
+                    const dur = s.durations[0];
+                    return (
+                      <button key={s.id} type="button"
+                        className={`svc-row ${selected ? 'is-selected' : ''}`}
+                        onClick={() => { onService(s.id); onDuration(dur); }}>
+                        <div className="svc-row__body">
+                          <span className="svc-row__name">
+                            {t(s.nameKey, lang)}
+                            {s.noteKey && <span className="svc-row__note"> · {t(s.noteKey, lang)}</span>}
+                          </span>
+                          <span className="svc-row__desc">{t(s.descKey, lang)}</span>
+                        </div>
+                        <div className="svc-row__meta">
+                          <span className="svc-row__dur">{dur.min} min</span>
+                          <span className="svc-row__price">€{Number.isInteger(dur.price) ? dur.price : dur.price.toFixed(2).replace('.', ',')}</span>
+                        </div>
+                      </button>
+                    );
+                  })}
                 </div>
               )}
             </div>
           );
         })}
       </div>
+
+      {selectedSvc && (
+        <div className="svc-selected-detail">
+          <div className="svc-selected-detail__name">{t(selectedSvc.nameKey, lang)}</div>
+          {selectedSvc.descKey && <div className="svc-selected-detail__desc">{t(selectedSvc.descKey, lang)}</div>}
+          <div className="svc-selected-detail__dur">{duration?.min} min · €{Number.isInteger(duration?.price) ? duration?.price : duration?.price?.toFixed(2).replace('.', ',')}</div>
+        </div>
+      )}
     </div>
   );
 }

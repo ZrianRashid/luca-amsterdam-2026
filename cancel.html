@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Reservering annuleren · LUCA Amsterdam</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:wght@300;400;500&family=Marcellus&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="reserve.css" />
+<style>
+  .cancel-shell { min-height: 100dvh; display: grid; place-items: center; padding: 40px 24px; }
+  .cancel-card {
+    width: 100%; max-width: 520px;
+    background: rgba(20, 17, 14, 0.7);
+    border: 1px solid var(--line, rgba(246, 243, 236, 0.12));
+    border-radius: 18px;
+    padding: 36px 28px;
+    text-align: center;
+    backdrop-filter: blur(12px);
+  }
+  .cancel-kicker {
+    font-family: 'DM Sans', ui-sans-serif, system-ui;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold, #C9A86C);
+    margin-bottom: 14px;
+  }
+  .cancel-title {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-weight: 300;
+    font-size: clamp(28px, 5vw, 38px);
+    color: var(--cream, #F6F3EC);
+    letter-spacing: -0.01em;
+    margin-bottom: 12px;
+  }
+  .cancel-sub {
+    color: rgba(246, 243, 236, 0.6);
+    font-family: 'DM Sans', ui-sans-serif, system-ui;
+    font-size: 14px;
+    line-height: 1.7;
+    margin-bottom: 24px;
+  }
+  .cancel-details {
+    background: rgba(246, 243, 236, 0.04);
+    border: 1px solid rgba(246, 243, 236, 0.08);
+    border-radius: 12px;
+    padding: 14px 18px;
+    margin-bottom: 24px;
+    text-align: left;
+  }
+  .cancel-row { display: flex; justify-content: space-between; padding: 6px 0; font-size: 13px; font-family: 'DM Sans', ui-sans-serif, system-ui; }
+  .cancel-row__label { color: rgba(246, 243, 236, 0.5); }
+  .cancel-row__value { color: var(--cream, #F6F3EC); font-family: 'Cormorant Garamond', Georgia, serif; font-size: 16px; }
+  .cancel-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .btn { font-family: 'DM Sans', ui-sans-serif, system-ui; }
+  .lang-toggle {
+    position: fixed; top: 18px; right: 18px;
+    display: flex; gap: 6px;
+    background: rgba(20, 17, 14, 0.7);
+    border: 1px solid var(--line, rgba(246, 243, 236, 0.12));
+    padding: 6px 10px; border-radius: 99px;
+    font-family: 'DM Sans', ui-sans-serif, system-ui; font-size: 13px;
+    backdrop-filter: blur(10px);
+  }
+  .lang-toggle button { appearance: none; background: none; border: 0; color: rgba(246, 243, 236, 0.55); cursor: pointer; font-size: 14px; }
+  .lang-toggle button.is-active { color: var(--gold, #C9A86C); }
+  .lang-toggle__divider { color: rgba(246, 243, 236, 0.25); }
+</style>
+</head>
+<body>
+
+<div class="lang-toggle" id="lang-toggle">
+  <button type="button" data-lang="nl" class="is-active">🇳🇱</button>
+  <span class="lang-toggle__divider">·</span>
+  <button type="button" data-lang="en">🇬🇧</button>
+</div>
+
+<div class="stage" aria-hidden>
+  <div class="stage__layer stage__layer--a"></div>
+  <div class="stage__layer stage__layer--b"></div>
+  <div class="stage__veil"></div>
+  <div class="stage__grain"></div>
+</div>
+
+<main class="cancel-shell">
+  <div class="cancel-card" id="card">
+    <div class="cancel-kicker" id="kicker">LUCA</div>
+    <h1 class="cancel-title" id="title">…</h1>
+    <p class="cancel-sub" id="sub"></p>
+    <div class="cancel-details" id="details" hidden></div>
+    <div class="cancel-actions" id="actions"></div>
+  </div>
+</main>
+
+<script src="i18n.js?v=4"></script>
+<script>
+(function () {
+  const t = (k) => window.LucaI18n.t(k, window.LucaI18n.getLang());
+  const params = new URLSearchParams(location.search);
+  const ref = params.get('ref');
+  const token = params.get('token');
+
+  const $kicker = document.getElementById('kicker');
+  const $title  = document.getElementById('title');
+  const $sub    = document.getElementById('sub');
+  const $details = document.getElementById('details');
+  const $actions = document.getElementById('actions');
+
+  function render(state, data) {
+    if (state === 'loading') {
+      $kicker.textContent = 'LUCA';
+      $title.textContent  = t('c.lookup');
+      $sub.textContent    = '';
+      $details.hidden = true;
+      $actions.innerHTML = '';
+      return;
+    }
+    if (state === 'not_found') {
+      $kicker.textContent = 'LUCA';
+      $title.textContent  = t('c.title.gone');
+      $sub.textContent    = t('c.not_found');
+      $details.hidden = true;
+      $actions.innerHTML = `<a href="index.html" class="btn btn--ghost"><span>${t('c.home')}</span></a>`;
+      return;
+    }
+    if (state === 'confirm') {
+      $kicker.textContent = data.reference;
+      $title.textContent  = t('c.title.confirm');
+      $sub.textContent    = data.serviceName + ' · ' + data.dateLabel + ' · ' + data.time;
+      $details.hidden = false;
+      $details.innerHTML = data.rowsHtml;
+      $actions.innerHTML = `
+        <button id="confirm-cancel" class="btn btn--primary"><span>${t('c.confirm')}</span></button>
+        <a href="index.html" class="btn btn--ghost"><span>${t('c.keep')}</span></a>
+      `;
+      document.getElementById('confirm-cancel').addEventListener('click', () => doCancel());
+      return;
+    }
+    if (state === 'cancelled') {
+      $kicker.textContent = data.reference;
+      $title.textContent  = t('c.title.ok');
+      $sub.textContent    = t('c.done');
+      $details.hidden = true;
+      $actions.innerHTML = `<a href="index.html" class="btn btn--ghost"><span>${t('c.home')}</span></a>`;
+      return;
+    }
+  }
+
+  function fmtDate(iso, lang) {
+    const d = new Date(iso);
+    return new Intl.DateTimeFormat(lang === 'nl' ? 'nl-NL' : 'en-GB',
+      { weekday: 'long', day: 'numeric', month: 'long' }).format(d);
+  }
+  function fmtTime(iso) {
+    const d = new Date(iso);
+    return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+  }
+
+  let bookingCache = null;
+  async function lookup() {
+    if (!ref || !token) { render('not_found'); return; }
+    render('loading');
+    try {
+      const r = await fetch(`/.netlify/functions/get-booking?ref=${encodeURIComponent(ref)}&token=${encodeURIComponent(token)}`);
+      if (!r.ok) { render('not_found'); return; }
+      const j = await r.json();
+      bookingCache = j;
+      const lang = window.LucaI18n.getLang();
+      const svc = j.service || {};
+      const dateLabel = fmtDate(j.booking.start_at, lang);
+      const time = fmtTime(j.booking.start_at);
+      const rowsHtml = `
+        <div class="cancel-row"><span class="cancel-row__label">${lang==='nl'?'Behandeling':'Service'}</span><span class="cancel-row__value">${svc[lang==='nl'?'name_nl':'name_en']||''} · ${svc.duration_min||0} min</span></div>
+        <div class="cancel-row"><span class="cancel-row__label">${lang==='nl'?'Datum':'Date'}</span><span class="cancel-row__value">${dateLabel}</span></div>
+        <div class="cancel-row"><span class="cancel-row__label">${lang==='nl'?'Tijd':'Time'}</span><span class="cancel-row__value">${time}</span></div>
+        <div class="cancel-row"><span class="cancel-row__label">${lang==='nl'?'Gasten':'Guests'}</span><span class="cancel-row__value">${j.booking.guests}</span></div>
+      `;
+      if (j.booking.status === 'cancelled') render('cancelled', { reference: ref });
+      else render('confirm', { reference: ref, serviceName: svc[lang==='nl'?'name_nl':'name_en']||'', dateLabel, time, rowsHtml });
+    } catch (e) {
+      render('not_found');
+    }
+  }
+
+  async function doCancel() {
+    const btn = document.getElementById('confirm-cancel');
+    if (btn) { btn.disabled = true; btn.querySelector('span').textContent = '…'; }
+    try {
+      const r = await fetch('/.netlify/functions/cancel-booking', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ref, token, reason: 'customer' }),
+      });
+      const j = await r.json();
+      if (r.ok && (j.status === 'cancelled' || j.alreadyCancelled)) {
+        render('cancelled', { reference: ref });
+      } else {
+        render('not_found');
+      }
+    } catch (e) {
+      render('not_found');
+    }
+  }
+
+  // Lang toggle
+  document.getElementById('lang-toggle').querySelectorAll('button').forEach(b => {
+    b.addEventListener('click', () => {
+      window.LucaI18n.setLang(b.dataset.lang);
+      document.querySelectorAll('#lang-toggle button').forEach(x => x.classList.toggle('is-active', x.dataset.lang === b.dataset.lang));
+      lookup();
+    });
+  });
+
+  lookup();
+})();
+</script>
+</body>
+</html>

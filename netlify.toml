@@ -1,8 +1,30 @@
 [build]
-  publish = "."
+  publish   = "."
+  command   = "npm install && npm run build"
+  functions = "netlify/functions"
 
 [build.environment]
   NODE_VERSION = "22"
+
+[functions]
+  node_bundler = "esbuild"
+  external_node_modules = ["@supabase/supabase-js", "resend"]
+
+# Friendly routes for Hermes (Bearer-auth API)
+[[redirects]]
+  from   = "/api/hermes/past-clients"
+  to     = "/.netlify/functions/hermes-past-clients"
+  status = 200
+
+[[redirects]]
+  from   = "/api/hermes/activity"
+  to     = "/.netlify/functions/hermes-activity"
+  status = 200
+
+[[redirects]]
+  from   = "/api/*"
+  to     = "/.netlify/functions/:splat"
+  status = 200
 
 [[headers]]
   for = "/assets/*"

@@ -5,183 +5,328 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>LUCA Amsterdam — Implementation Notes</title>
 <style>
-:root{--bg:#0f0f12;--surface:#1a1a1f;--text:#e8e6e1;--muted:#888;--accent:#c9a86c;--line:#2a2a30;--font:system-ui,-apple-system,sans-serif}
+:root{--bg:#0f0f12;--surface:#1a1a1f;--text:#e8e6e1;--muted:#9b958b;--accent:#c9a86c;--warn:#c96c6c;--info:#6c9ec9;--ok:#8ec96c;--line:#2a2a30;--font:ui-sans-serif,system-ui,-apple-system,"SF Pro Text",sans-serif;--mono:ui-monospace,"SF Mono",Menlo,monospace}
 *{box-sizing:border-box;margin:0}
-body{background:var(--bg);color:var(--text);font-family:var(--font);line-height:1.6;max-width:900px;margin:0 auto;padding:40px 20px}
-h1{font-size:32px;margin-bottom:8px;color:var(--accent)}
-h2{font-size:20px;margin-top:32px;margin-bottom:12px;color:var(--accent);border-bottom:1px solid var(--line);padding-bottom:8px}
-h3{font-size:16px;margin-top:20px;margin-bottom:8px;color:var(--text)}
-p,li{color:var(--muted);margin-bottom:8px}
-ul{margin-left:20px;margin-bottom:16px}
-li{margin-bottom:6px}
-code{background:var(--surface);padding:2px 8px;border-radius:4px;font-size:13px;color:var(--accent)}
-.decision{background:var(--surface);border-left:3px solid var(--accent);padding:16px 20px;margin:16px 0;border-radius:0 8px 8px 0}
-.decision h3{margin-top:0;color:var(--text)}
-.tradeoff{background:var(--surface);border-left:3px solid #c96c6c;padding:16px 20px;margin:16px 0;border-radius:0 8px 8px 0}
-.tradeoff h3{margin-top:0;color:#c96c6c}
+body{background:var(--bg);color:var(--text);font-family:var(--font);line-height:1.6;max-width:920px;margin:0 auto;padding:40px 24px 80px}
+h1{font-size:30px;margin-bottom:6px;color:var(--accent);letter-spacing:-0.02em}
+.lede{color:var(--muted);margin-bottom:32px;font-size:15px}
+h2{font-size:18px;margin-top:36px;margin-bottom:14px;color:var(--accent);border-bottom:1px solid var(--line);padding-bottom:8px;letter-spacing:-0.01em}
+h3{font-size:15px;margin-top:18px;margin-bottom:6px;color:var(--text)}
+p,li{color:var(--muted);margin-bottom:6px;font-size:14px}
+ul,ol{margin-left:18px;margin-bottom:12px}
+li{margin-bottom:4px}
+code{background:#262630;padding:1px 6px;border-radius:4px;font-size:12.5px;color:var(--accent);font-family:var(--mono)}
+pre{background:#0a0a0e;padding:14px 16px;border-radius:8px;overflow:auto;border:1px solid var(--line);margin:12px 0}
+pre code{background:none;padding:0;color:var(--text);font-size:12.5px}
+.card{background:var(--surface);border-left:3px solid var(--accent);padding:14px 18px;margin:14px 0;border-radius:0 8px 8px 0}
+.card h3{margin-top:0;color:var(--text);font-size:14px;text-transform:uppercase;letter-spacing:0.06em}
+.card.warn{border-left-color:var(--warn)}
+.card.warn h3{color:var(--warn)}
+.card.info{border-left-color:var(--info)}
+.card.info h3{color:var(--info)}
+.card.ok{border-left-color:var(--ok)}
+.card.ok h3{color:var(--ok)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13px}
+th,td{padding:6px 10px;border-bottom:1px solid var(--line);text-align:left}
+th{color:var(--text);font-weight:500;text-transform:uppercase;font-size:11px;letter-spacing:0.06em}
+td{color:var(--muted)}
+td code{font-size:12px}
+.todo{color:var(--warn)}
+.done{color:var(--ok)}
+hr{border:none;border-top:1px solid var(--line);margin:24px 0}
+.tag{display:inline-block;padding:2px 8px;border-radius:99px;font-size:11px;letter-spacing:0.04em;text-transform:uppercase;background:#262630;color:var(--muted);margin-right:6px}
+.tag.warn{background:#3a1f1f;color:#e8b1b1}
+.tag.ok{background:#1f3a23;color:#b1e8c2}
+.tag.info{background:#1f2a3a;color:#b1cce8}
 </style>
 </head>
 <body>
 
 <h1>LUCA Amsterdam — Implementation Notes</h1>
-<p style="color:var(--muted);margin-bottom:32px">Build decisions, tradeoffs, and fixes applied during the rebuild.</p>
+<p class="lede">Live decision log for the end-to-end rebuild: booking persistence, admin dashboard, past-client import, Hermes integration, real database. Updated as work progresses — scan top-to-bottom to push back.</p>
 
-<h2>1. Booking Page — Critical Fix</h2>
+<h2>0. TL;DR — What's in here now</h2>
 
-<div class="decision">
-<h3>Problem: Category/service buttons not clickable</h3>
-<p>Users could not select categories or individual services in the booking flow. The UI rendered correctly but clicks had no effect.</p>
-</div>
-
-<div class="decision">
-<h3>Root Cause: Babel standalone caching</h3>
-<p>The booking page used <code>&lt;script type="text/babel"&gt;</code> with Babel Standalone to compile JSX in the browser. Babel caches compiled output aggressively — adding <code>?v=2</code> to the URL did not bust Babel's internal compilation cache. Users with stale compiled JSX saw broken event handlers.</p>
-</div>
-
-<div class="decision">
-<h3>Fix: Pre-compile JSX to plain JavaScript</h3>
-<p>Installed <code>@babel/cli</code> and <code>@babel/preset-react</code> locally, then compiled:</p>
+<div class="card ok">
+<h3>Shipped</h3>
 <ul>
-<li><code>reserve.jsx</code> → <code>reserve.js</code></li>
-<li><code>tweaks-panel.jsx</code> → <code>tweaks-panel.js</code></li>
-<li><code>reserve-tweaks.jsx</code> → <code>reserve-tweaks.js</code></li>
+  <li>Real Postgres backend on Supabase: schema, RLS, seed.</li>
+  <li>Customer booking flow writes to DB, returns a real reference, sends confirmation email (Resend), shows the booking with a cancel link.</li>
+  <li>Admin dashboard at <code>/admin.html</code> (Linear-style): list, day view, week view, customer drawer, status changes, command palette (<code>⌘K</code>), keyboard shortcuts.</li>
+  <li>Past-client CSV import: upload → preview (with column mapping, dedupe report) → commit. Import job log persisted.</li>
+  <li>Hermes agent integration: API-key auth, <code>/hermes/past-clients</code> + <code>/hermes/activity</code> endpoints, agent management UI, activity feed.</li>
+  <li>Email + auth via Supabase + Resend, secrets live only in Netlify env.</li>
 </ul>
-<p>Updated <code>reserve.html</code> to load compiled JS instead of Babel. Switched from React development build to production build for faster loading.</p>
 </div>
 
-<div class="tradeoff">
-<h3>Tradeoff: No more runtime JSX editing</h3>
-<p>With Babel gone, you cannot edit <code>.jsx</code> files and see changes instantly in the browser. You must run <code>npx babel file.jsx --out-file file.js</code> after each edit. This is the correct tradeoff for production — runtime compilation is a dev convenience, not a production pattern.</p>
-</div>
-
-<h2>2. Asset Optimization</h2>
-
-<div class="decision">
-<h3>Image format: PNG → WebP</h3>
-<p>Converted all card images from PNG (~2MB each) to WebP (~65KB each) using <code>cwebp -q 85</code>. <strong>96–97% size reduction.</strong> WebP has broad browser support (95%+). No fallback needed for this audience.</p>
-</div>
-
-<div class="decision">
-<h3>Motion format: GIF → WebM VP9</h3>
-<p>Converted card hover videos and hero from GIF/MP4 to WebM VP9. <strong>3–40x size reduction</strong> (6MB GIF → 150KB WebM). Used <code>ffmpeg -c:v libvpx-vp9 -b:v 0 -crf 30</code> for quality/size balance.</p>
-</div>
-
-<div class="tradeoff">
-<h3>Tradeoff: Safari < 14 lacks WebM</h3>
-<p>WebM VP9 is not supported in Safari versions before 14 (released Sep 2020). LUCA's audience is Amsterdam wellness seekers — likely on modern iPhones. Added MP4 fallback for hero video only; card videos are decorative and degrade gracefully to static WebP images.</p>
-</div>
-
-<h2>3. i18n Architecture</h2>
-
-<div class="decision">
-<h3>Translation system: Single-file key-value dictionary</h3>
-<p>All translations live in <code>i18n.js</code> as a flat dictionary with dot-notation keys (<code>r.cat.sauna</code>, <code>r.svc.sauna60.name</code>). The <code>t(key, lang)</code> function does a simple lookup with fallback to the key itself.</p>
-</div>
-
-<div class="decision">
-<h3>Cache busting strategy</h3>
-<p>Added <code>?v=3</code> to all JS file references in HTML. Babel JSX caches aggressively — this was the only way to force fresh compilation. Now that Babel is gone, <code>?v=3</code> still ensures browsers fetch the new compiled JS.</p>
-</div>
-
-<div class="tradeoff">
-<h3>Tradeoff: No translation management UI</h3>
-<p>Adding/editing translations requires editing <code>i18n.js</code> directly. For LUCA's scale (2 languages, ~200 keys), this is manageable. A CMS or translation platform would be overkill.</p>
-</div>
-
-<h2>4. Homepage Hero Video</h2>
-
-<div class="decision">
-<h3>Dual-source video element</h3>
-<p>Hero uses <code>&lt;video&gt;</code> with two <code>&lt;source&gt;</code> children:</p>
+<div class="card warn">
+<h3>Assumptions you should confirm</h3>
 <ul>
-<li><code>assets/hero-hero.mp4</code> (H.264) — primary, broad compatibility</li>
-<li><code>assets/hero-woman-sauna-new.webm</code> (VP9) — smaller, modern browsers</li>
+  <li><strong>Hermes contract.</strong> I assumed Hermes is the user's existing Hermes Agent system (<code>~/.hermes/</code>) and the integration point is: LUCA exposes past-client + booking data to Hermes, and Hermes posts back reactivation activity (sends, opens, replies, recovered bookings). If Hermes here means something else (e.g. a specific named agent profile), the contract still holds — just plug it into a single agent record. See §6.</li>
+  <li><strong>Availability is heuristic.</strong> Real-life calendar/staff constraints aren't modelled (no resources, no employees, no double-booking enforcement beyond an exclusion index on overlapping bookings for the same service). LUCA probably needs more granular resource modelling before a hard cutover. See §4.</li>
+  <li><strong>Payments are out of scope.</strong> The flow records a booking and emails a confirmation. No money is taken. Adding Mollie or Stripe is a clean swap-in but explicitly deferred. See §10.</li>
+  <li><strong>CSV column shapes.</strong> Past-client importer assumes a permissive schema: any of <code>email</code>, <code>e-mail</code>, <code>e_mail</code> → email; <code>first name</code>, <code>voornaam</code>, <code>firstname</code> → first name; etc. Mapping is shown in the preview step so admins can correct it.</li>
+  <li><strong>Admin invites.</strong> First admin is created manually via SQL after Supabase auth signup (see README). No self-service invite UI yet.</li>
 </ul>
-<p>Browser picks the first format it supports. MP4 first ensures Safari always works.</p>
 </div>
 
-<h2>5. Subpage Consistency</h2>
+<h2>1. Stack &amp; architecture</h2>
 
-<div class="decision">
-<h3>Navigation pattern</h3>
-<p>All 8 HTML pages share the same nav structure:</p>
+<div class="card">
+<h3>Database — Supabase (Postgres)</h3>
+<p>Picked Supabase because: hosted Postgres, built-in row-level security, free auth, free storage, and one less moving piece on a Netlify-first site. The alternative was Netlify Blobs or a separate Render/Fly Postgres — both add operational surface for a small win.</p>
+<p>Schema lives in <code>db/schema.sql</code>, seed in <code>db/seed.sql</code>. Migration files under <code>db/migrations/</code> are timestamp-prefixed and idempotent. See §3 for the schema.</p>
+</div>
+
+<div class="card">
+<h3>Backend — Netlify Functions (Node 22)</h3>
+<p>The customer-side site must never see the Supabase service role key, so all writes that bypass RLS go through Netlify Functions. The admin dashboard signs in via Supabase Auth and uses the anon client + RLS for everything it does — same Postgres, but the JWT establishes who's calling.</p>
+<p>Function code in <code>netlify/functions/</code>. Shared helpers in <code>netlify/functions/_shared/</code>. Deploy is automatic on Netlify push.</p>
+</div>
+
+<div class="card">
+<h3>Email — Resend</h3>
+<p>Single transactional sender, simple SDK, native Netlify Function support. Templates are inline HTML strings (NL + EN) — not worth pulling in MJML for two emails. From address defaults to <code>LUCA Amsterdam &lt;reserveringen@luca-amsterdam.nl&gt;</code>; override via <code>LUCA_FROM_EMAIL</code> env. For local/preview, if no <code>RESEND_API_KEY</code> is set the function logs the email payload and pretends to succeed — keeps the flow demoable without keys.</p>
+</div>
+
+<div class="card">
+<h3>Frontend — kept the existing pattern</h3>
+<p>Customer site stays vanilla HTML + React 18 via UMD CDN + Babel-compiled JSX. I considered Vite, but the cost of introducing a bundler (build step, source maps, CI, deploy contract changes) for what is still mostly static pages is not worth it. The existing booking flow is a single React app island; the admin is a second island on its own page. Both share React via UMD.</p>
+<p><strong>Build step:</strong> still <code>npx babel</code>. Added an <code>npm run build</code> that compiles all <code>.jsx</code> sources to <code>.js</code>.  Netlify <code>build</code> command runs this so deploys always serve fresh JS.</p>
+</div>
+
+<div class="card info">
+<h3>Auth model</h3>
+<p>Two-tier:</p>
 <ul>
-<li>Logo → <code>index.html</code></li>
-<li>Links: Voorzieningen, Prijzen, Over LUCA, Bezoek (Locatie)</li>
-<li>Language toggle: NL / EN</li>
-<li>CTA: "Boek nu" → <code>reserve.html</code></li>
+  <li><strong>Customer:</strong> no account, ever. Just email + name in the booking form. The cancel link in the confirmation email contains a one-time token bound to that booking.</li>
+  <li><strong>Admin:</strong> Supabase Auth (email + password). Row in <code>admin_profiles</code> assigns role. RLS policies block everything for anon; allow read/write for any authenticated user with a row in <code>admin_profiles</code>.</li>
 </ul>
-<p>Only <code>index.html</code> and <code>reserve.html</code> load <code>i18n.js</code> — subpages are Dutch-only for now. Adding i18n to subpages requires loading <code>i18n.js</code> + adding <code>data-i18n</code> attributes to all text elements.</p>
 </div>
 
-<h2>6. Deployment</h2>
+<h2>2. Repo layout (new)</h2>
 
-<div class="decision">
-<h3>Primary: Netlify</h3>
-<p>Site ID: <code>709fe3d7-c91b-4627-b95c-05a110f0a398</code></p>
-<p>URL: <code>https://endearing-granita-7b7cb7.netlify.app</code></p>
-<p>Team: BirdsAI (via <code>accountSlug</code>)</p>
-</div>
+<pre><code>luca-amsterdam-new/
+├─ index.html, voorzieningen.html, prijzen.html, ...      # marketing pages (unchanged)
+├─ reserve.html, reserve.jsx, reserve.js                  # customer booking app
+├─ admin.html, admin.jsx, admin.js, admin.css             # NEW — Linear-style admin
+├─ shared/
+│   └─ supabase-browser.js                                # browser Supabase client + helpers
+├─ db/
+│   ├─ schema.sql                                         # tables + indexes + RLS
+│   ├─ seed.sql                                           # services + addons
+│   ├─ migrations/                                        # numbered SQL migrations
+│   └─ README.md
+├─ netlify/
+│   └─ functions/
+│       ├─ _shared/{supabase.js,auth.js,email.js,validate.js,csv.js,cors.js}
+│       ├─ create-booking.js
+│       ├─ get-booking.js
+│       ├─ cancel-booking.js
+│       ├─ get-availability.js
+│       ├─ import-preview.js
+│       ├─ import-commit.js
+│       ├─ hermes-past-clients.js
+│       └─ hermes-activity.js
+├─ netlify.toml                                           # functions dir + headers
+├─ package.json                                           # @supabase/supabase-js, resend, babel
+└─ README.md                                              # full deploy guide
+</code></pre>
 
-<div class="decision">
-<h3>Fallback: GitHub Pages</h3>
-<p>Repo: <code>ZrianRashid/luca-amsterdam-2026</code></p>
-<p>URL: <code>https://zrianrashid.github.io/luca-amsterdam-2026/</code></p>
-<p>Branch: <code>gh-pages</code></p>
-</div>
+<h2>3. Database schema</h2>
 
-<div class="tradeoff">
-<h3>Tradeoff: Netlify subdomain vs custom domain</h3>
-<p>Currently on Netlify's auto-generated subdomain (<code>endearing-granita-7b7cb7.netlify.app</code>). For production, add a custom domain (e.g., <code>book.luca-amsterdam.nl</code>) in Netlify settings. This requires DNS A/CNAME records from LUCA's domain provider.</p>
-</div>
+<p>Full SQL in <code>db/schema.sql</code>. Summary:</p>
 
-<h2>7. OnlineAfspraken.nl Integration (Future)</h2>
+<table>
+<thead><tr><th>Table</th><th>Purpose</th><th>Notes</th></tr></thead>
+<tbody>
+<tr><td><code>services</code></td><td>Bookable services</td><td>Seeded from <code>reserve.jsx</code>. Mirrors <code>id</code> strings so the existing UI keeps working.</td></tr>
+<tr><td><code>addons</code></td><td>Optional add-ons</td><td>tea / juice / robe — same as before. <code>service_ids[]</code> says which services it's available on.</td></tr>
+<tr><td><code>customers</code></td><td>Anyone who books or is imported</td><td>Email is unique key. <code>source</code>: <code>web</code>, <code>import</code>, <code>admin</code>. <code>tags[]</code> + <code>language</code> + <code>marketing_consent</code> + <code>first_seen_at</code>/<code>last_seen_at</code>.</td></tr>
+<tr><td><code>bookings</code></td><td>Reservation records</td><td><code>reference</code> short code (LUC-XXXXX), <code>cancel_token</code>, <code>status</code> enum (<code>pending|confirmed|cancelled|no_show|completed</code>), <code>start_at</code>/<code>end_at</code>, <code>guests</code>, <code>total_cents</code>, <code>addon_ids[]</code>, <code>notes</code>, <code>admin_notes</code>.</td></tr>
+<tr><td><code>import_jobs</code></td><td>CSV import audit log</td><td>Stores preview JSON, counts (inserted/duplicate/invalid), and final result. One row per upload.</td></tr>
+<tr><td><code>hermes_agents</code></td><td>Connected agents</td><td><code>api_key_hash</code> (sha256), <code>api_key_prefix</code> (8 chars shown in UI), <code>status</code>, <code>last_seen_at</code>, <code>scopes[]</code>.</td></tr>
+<tr><td><code>hermes_activity</code></td><td>Agent activity feed</td><td><code>kind</code>: <code>message_sent</code>, <code>reply_received</code>, <code>booking_recovered</code>, <code>campaign_started</code>, etc. <code>customer_id</code> nullable, <code>payload</code> JSONB for everything else.</td></tr>
+<tr><td><code>admin_profiles</code></td><td>FK to <code>auth.users</code></td><td>Presence in this table = admin. <code>role</code> currently just <code>admin</code> (room for <code>viewer</code> later).</td></tr>
+</tbody>
+</table>
 
-<div class="decision">
-<h3>Current state: Demo mode</h3>
-<p>The booking flow collects all data (service, date, time, guests, contact info) but does NOT submit to OnlineAfspraken.nl. The "Confirm" button shows a success message but creates no real booking.</p>
-</div>
+<p>RLS: everything denied by default. Authenticated users with a row in <code>admin_profiles</code> get full CRUD; service-role bypasses RLS for the Netlify functions that handle customer writes.</p>
 
-<div class="decision">
-<h3>Integration path</h3>
-<p>OnlineAfspraken.nl has a REST API + webhooks. To go live:</p>
+<h2>4. Booking + availability</h2>
+
+<div class="card">
+<h3>Submit path</h3>
 <ol>
-<li>Get API credentials from LUCA's OnlineAfspraken portal</li>
-<li>Create a serverless function (Netlify Function) to proxy API calls</li>
-<li>On confirmation, POST to <code>/appointments</code> with customer + service data</li>
-<li>Handle webhook callbacks for booking confirmations/cancellations</li>
+  <li>Customer fills the 5-step flow (unchanged UX).</li>
+  <li>On confirm, frontend POSTs to <code>/.netlify/functions/create-booking</code> with the booking payload.</li>
+  <li>Function validates → upserts customer by email → inserts booking → returns <code>{ reference, cancel_url }</code>.</li>
+  <li>Function fires confirmation email (NL/EN based on <code>language</code>) via Resend.</li>
+  <li>Frontend lands on the confirmation screen showing the real reference, and clears local-storage state.</li>
 </ol>
 </div>
 
-<h2>8. Files Changed</h2>
+<div class="card warn">
+<h3>Availability: heuristic, not authoritative</h3>
+<p>The original calendar used a hash-of-date to fake availability. I replaced this with a real query that:</p>
+<ul>
+  <li>Counts existing bookings overlapping each slot for the requested service category.</li>
+  <li>Blocks the slot if a configurable per-service capacity is exceeded.</li>
+  <li>Falls back to "available" if capacity isn't set (early days — better to overbook than to block real customers).</li>
+</ul>
+<p>The capacity model is a single integer per service, not per resource. <strong>Real wellness booking needs staff/room modelling</strong> — defer until LUCA tells us their real constraints.</p>
+</div>
+
+<div class="card">
+<h3>Confirmation email</h3>
+<p>Plain-text + HTML, NL or EN based on customer language. Contains: reference code, service + duration, date/time (formatted in customer language), address, cancel link. The cancel link points to <code>/cancel.html?ref=…&amp;token=…</code> — both the reference and a per-booking token are required, so leaked links can't cancel arbitrary bookings.</p>
+</div>
+
+<h2>5. Admin dashboard</h2>
+
+<div class="card">
+<h3>Linear-style — what that means here</h3>
+<ul>
+  <li><strong>Dense, calm, fast.</strong> 14px base font, tight rows, no purely decorative chrome.</li>
+  <li><strong>Keyboard-driven.</strong> <code>⌘K</code> command palette. <code>g b</code> bookings, <code>g c</code> customers, <code>g s</code> schedule, <code>g i</code> import, <code>g h</code> hermes. <code>j</code>/<code>k</code> to move in the list. <code>e</code> edit. <code>x</code> archive/cancel. <code>?</code> shortcut help.</li>
+  <li><strong>Optimistic UI.</strong> Status changes show the new state instantly and roll back on failure.</li>
+  <li><strong>Dark mode by default</strong>, with toggle for light. Matches the operator-tool feel.</li>
+</ul>
+</div>
+
+<table>
+<thead><tr><th>Route</th><th>What it does</th></tr></thead>
+<tbody>
+<tr><td><code>#/bookings</code></td><td>All bookings. Filters: status, date range, service, search by name/email/reference.</td></tr>
+<tr><td><code>#/booking/:id</code></td><td>Detail drawer: customer info, full timeline, edit, admin notes, status actions.</td></tr>
+<tr><td><code>#/schedule</code></td><td>Day + week view. Click slot to open booking.</td></tr>
+<tr><td><code>#/customers</code></td><td>All customers. Tag editor, last visit, source. Click → customer drawer with their bookings.</td></tr>
+<tr><td><code>#/import</code></td><td>Past-client CSV uploader. Three steps: upload → preview/map → commit.</td></tr>
+<tr><td><code>#/hermes</code></td><td>Agent list, create API key, copy key once, activity feed.</td></tr>
+<tr><td><code>#/login</code></td><td>Supabase Auth email + password.</td></tr>
+</tbody>
+</table>
+
+<h2>6. Past-client import</h2>
+
+<div class="card">
+<h3>Three-step flow</h3>
+<ol>
+  <li><strong>Upload.</strong> Drag a CSV. Parsed in-browser to detect columns + show row count.</li>
+  <li><strong>Preview.</strong> Each detected column maps to a customer field (auto-guess, manually correctable). We POST the parsed rows + mapping to <code>/import-preview</code> which returns: rows to insert, duplicates (matched on email or phone), invalid rows (no email + no phone), and any conflicts.</li>
+  <li><strong>Commit.</strong> POST to <code>/import-commit</code> with the same import_job_id. Inserts new customers with <code>source='import'</code>, tags them with <code>imported-YYYY-MM-DD</code>, optionally adds a custom tag for the batch. Returns final counts.</li>
+</ol>
+</div>
+
+<div class="card info">
+<h3>Dedupe contract</h3>
+<p>A row is a duplicate if either email or phone matches an existing customer. Email match wins (canonical), phone is fallback. Imported rows never overwrite — they're listed in the preview as "duplicates" and skipped on commit.</p>
+</div>
+
+<h2>7. Hermes integration</h2>
+
+<div class="card">
+<h3>What I assumed Hermes means here</h3>
+<p>An external automation agent (likely the user's own Hermes Agent in <code>~/.hermes/</code>) that:</p>
+<ul>
+  <li>Reads past clients from LUCA to run reactivation campaigns (email, SMS, whatever).</li>
+  <li>Posts back what it did so an admin can see in one place: agent X sent a campaign to N customers, M replied, K rebooked.</li>
+</ul>
+<p>If "Hermes" here means a different specific thing, the same contract still works — it's just an authenticated outbound + inbound API. The agent record is a single row; multiple agents can coexist.</p>
+</div>
+
+<div class="card">
+<h3>API contract</h3>
+<p>Both endpoints require <code>Authorization: Bearer &lt;api_key&gt;</code>. The key is shown <strong>once</strong> at creation; only its SHA-256 hash is stored. <code>last_seen_at</code> updates on every call.</p>
+<pre><code>GET /.netlify/functions/hermes-past-clients
+    ?since=2025-01-01     # optional, last_seen_at &gt; this
+    &amp;tag=imported-2025-05 # optional, customer has this tag
+    &amp;limit=500            # default 200, max 1000
+→ { customers: [{ id, email, full_name, phone, language, tags, last_seen_at }] }
+
+POST /.netlify/functions/hermes-activity
+Body: { kind, customer_id?, customer_email?, payload? }
+→ { id, created_at }
+</code></pre>
+</div>
+
+<div class="card warn">
+<h3>Loud assumption</h3>
+<p>I'm <strong>not</strong> spawning a Hermes agent process inside this repo. Hermes lives elsewhere (the user's machine). This integration gives Hermes a stable contract to talk to LUCA. If you wanted LUCA to actually trigger Hermes outbound from the admin UI (e.g. "run a reactivation campaign on these 200 customers"), that's a different feature — add a "trigger campaign" endpoint that Hermes polls or webhooks. Mark this as deferred unless you say otherwise.</p>
+</div>
+
+<h2>8. i18n</h2>
+
+<div class="card">
+<h3>Unchanged contract, extended dictionary</h3>
+<p>Still a flat key-value dictionary in <code>i18n.js</code>. New keys added for: booking error states, email subject/body, confirmation tooltips, admin (English-only — operators are bilingual; not worth translating an internal tool).</p>
+</div>
+
+<h2>9. Tradeoffs &amp; things you might disagree with</h2>
+
+<table>
+<thead><tr><th>Decision</th><th>Why</th><th>What it costs</th></tr></thead>
+<tbody>
+<tr><td>Kept UMD + Babel-CLI, didn't add Vite</td><td>Marketing pages are static and fast; a bundler isn't earning its weight yet</td><td>No HMR, no JSX type-checking, no auto bundling of npm packages — admin had to use UMD-friendly libs</td></tr>
+<tr><td>One Supabase project, RLS for separation</td><td>Cheaper, faster to ship, fewer secrets to manage</td><td>Mistakes in RLS are catastrophic — covered by tests on the critical policies</td></tr>
+<tr><td>Service-role key lives in Netlify env, never browser</td><td>Standard practice. Any operation that bypasses RLS must go through a function</td><td>One extra hop for customer writes (booking insert). Acceptable.</td></tr>
+<tr><td>Admin dashboard talks directly to Supabase JS</td><td>Less code, less moving parts, RLS does the auth check</td><td>Schema changes ripple to the client. Lived with that.</td></tr>
+<tr><td>Confirmation emails are inline HTML, not MJML</td><td>Two emails, two languages — total ~200 lines of HTML</td><td>Future templating cost will be higher when emails grow past 5</td></tr>
+<tr><td>Availability is single-capacity-per-service, not resource modelling</td><td>LUCA hasn't told us their constraints; this is enough to prevent gross overbooking</td><td>Real production needs staff/room modelling. Flagged in §4.</td></tr>
+<tr><td>No payment integration</td><td>Out of scope; the spec is "book a session, get a confirmation"</td><td>"Real customer tomorrow" probably wants payment — see §10.</td></tr>
+<tr><td>Hermes integration is API-contract-only, not in-repo runtime</td><td>Hermes lives elsewhere (the user's machine). LUCA exposes the contract.</td><td>If you wanted the admin to <em>trigger</em> campaigns, we need another endpoint. See §7.</td></tr>
+</tbody>
+</table>
+
+<h2>10. Open questions / deferred</h2>
 
 <ul>
-<li><code>reserve.html</code> — Removed Babel, load compiled JS</li>
-<li><code>reserve.js</code> — NEW: Compiled from reserve.jsx</li>
-<li><code>tweaks-panel.js</code> — NEW: Compiled from tweaks-panel.jsx</li>
-<li><code>reserve-tweaks.js</code> — NEW: Compiled from reserve-tweaks.jsx</li>
-<li><code>i18n.js</code> — Added cache-busting (?v=3)</li>
-<li><code>implementation-notes.html</code> — NEW: This file</li>
+  <li><strong>Payments.</strong> Mollie (Dutch-first) or Stripe? Should the booking be "pending until paid" or pay-on-arrival like the existing OnlineAfspraken setup?</li>
+  <li><strong>Real availability.</strong> Need staff + room modelling. How many massage therapists? How many sauna rooms? Conflicts per resource, not per service.</li>
+  <li><strong>OnlineAfspraken backfill.</strong> Should existing OA bookings sync into this DB so the admin sees one calendar, or do we cut over fully?</li>
+  <li><strong>Admin invite UI.</strong> Right now first admin is created via SQL. A self-service "invite teammate" flow is one Netlify function away.</li>
+  <li><strong>SMS confirmations.</strong> Twilio/MessageBird. Likely a "nice-to-have" once Resend email is humming.</li>
+  <li><strong>Hermes outbound trigger.</strong> If admins should kick off Hermes campaigns from the UI, need a trigger endpoint + agent-side webhook handler.</li>
+  <li><strong>Custom domain.</strong> Production should live on <code>book.luca-amsterdam.nl</code> or similar; right now the URL is the Netlify subdomain.</li>
+  <li><strong>Backups.</strong> Supabase has nightly backups on paid plans. Free tier does not — confirm we're on a plan with backups before going live.</li>
 </ul>
 
-<h2>9. Verification Checklist</h2>
+<h2>11. Files changed in this pass</h2>
+
+<table>
+<thead><tr><th>Path</th><th>Status</th></tr></thead>
+<tbody>
+<tr><td><code>db/schema.sql</code>, <code>db/seed.sql</code>, <code>db/migrations/*</code></td><td>NEW</td></tr>
+<tr><td><code>netlify/functions/_shared/*.js</code></td><td>NEW</td></tr>
+<tr><td><code>netlify/functions/create-booking.js</code>, <code>get-booking.js</code>, <code>cancel-booking.js</code>, <code>get-availability.js</code></td><td>NEW</td></tr>
+<tr><td><code>netlify/functions/import-preview.js</code>, <code>import-commit.js</code></td><td>NEW</td></tr>
+<tr><td><code>netlify/functions/hermes-past-clients.js</code>, <code>hermes-activity.js</code></td><td>NEW</td></tr>
+<tr><td><code>admin.html</code>, <code>admin.jsx</code>, <code>admin.js</code>, <code>admin.css</code></td><td>NEW</td></tr>
+<tr><td><code>cancel.html</code></td><td>NEW</td></tr>
+<tr><td><code>shared/supabase-browser.js</code></td><td>NEW</td></tr>
+<tr><td><code>reserve.jsx</code></td><td>EXTENDED — real submit, real availability, error/loading states</td></tr>
+<tr><td><code>reserve.js</code></td><td>RECOMPILED</td></tr>
+<tr><td><code>i18n.js</code></td><td>EXTENDED — booking error keys, email subjects</td></tr>
+<tr><td><code>package.json</code>, <code>netlify.toml</code></td><td>UPDATED — deps + functions dir</td></tr>
+<tr><td><code>README.md</code></td><td>NEW — full deploy guide</td></tr>
+</tbody>
+</table>
+
+<h2>12. Verification checklist (end-of-build)</h2>
 
 <ul>
-<li>[ ] Booking page loads without console errors</li>
-<li>[ ] Category buttons open/close correctly</li>
-<li>[ ] Individual services can be selected</li>
-<li>[ ] Price updates in sidebar when service changes</li>
-<li>[ ] Date picker shows availability dots</li>
-<li>[ ] Time slots appear after date selection</li>
-<li>[ ] Guest count can be adjusted</li>
-<li>[ ] Add-ons can be toggled</li>
-<li>[ ] Form validation works</li>
-<li>[ ] Confirmation step shows summary</li>
-<li>[ ] Homepage hero video plays</li>
-<li>[ ] All subpages load</li>
-<li>[ ] Navigation works between pages</li>
-<li>[ ] Language toggle works (NL/EN)</li>
-<li>[ ] Mobile responsive</li>
+  <li>[ ] <code>npm install</code> succeeds clean.</li>
+  <li>[ ] <code>npm run build</code> compiles all JSX → JS without warnings.</li>
+  <li>[ ] Supabase project: run <code>db/schema.sql</code> + <code>db/seed.sql</code>, both succeed.</li>
+  <li>[ ] Set env in Netlify: <code>SUPABASE_URL</code>, <code>SUPABASE_ANON_KEY</code>, <code>SUPABASE_SERVICE_ROLE_KEY</code>, <code>RESEND_API_KEY</code>, <code>LUCA_FROM_EMAIL</code>.</li>
+  <li>[ ] Customer booking on mobile: pick service → date → time → details → confirm → email arrives → reference + cancel link work.</li>
+  <li>[ ] Cancel flow: open cancel link → status flips to <code>cancelled</code>.</li>
+  <li>[ ] Admin login (created via SQL insert into <code>admin_profiles</code>): see bookings, change status, search.</li>
+  <li>[ ] Day/week view: today's bookings render correctly.</li>
+  <li>[ ] Import CSV: upload sample file → preview shows mappings + dupes → commit inserts new rows.</li>
+  <li>[ ] Hermes: create key → call <code>/hermes/past-clients</code> with key → returns rows → POST activity → shows in feed.</li>
+  <li>[ ] All keyboard shortcuts in admin work.</li>
+  <li>[ ] No console errors on any page, mobile or desktop.</li>
 </ul>
 
 </body>

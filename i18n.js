@@ -141,6 +141,22 @@
     'r.back':         { nl: '← Terug',                  en: '← Back' },
     'r.continue':     { nl: 'Doorgaan →',               en: 'Continue →' },
     'r.confirm':      { nl: 'Reservering bevestigen →', en: 'Confirm reservation →' },
+    'r.submitting':   { nl: 'Bezig met bevestigen…',    en: 'Confirming…' },
+    'r.err.submit':   { nl: 'Het bevestigen lukte niet. Probeer het nog eens.', en: 'Could not confirm. Please try again.' },
+    'r.ok.cancel.line': { nl: 'Plannen veranderd?', en: 'Plans changed?' },
+    'r.ok.cancel.cta':  { nl: 'Reservering annuleren', en: 'Cancel reservation' },
+    'r.ok.email.line':  { nl: 'We hebben je een bevestiging gemaild.', en: 'We’ve emailed you a confirmation.' },
+
+    // Cancel page
+    'c.title.ok':     { nl: 'Geannuleerd',                en: 'Cancelled' },
+    'c.title.confirm':{ nl: 'Reservering annuleren?',     en: 'Cancel this reservation?' },
+    'c.title.gone':   { nl: 'Niet gevonden',              en: 'Not found' },
+    'c.lookup':       { nl: 'Reservering ophalen…',       en: 'Looking up your reservation…' },
+    'c.done':         { nl: 'Je reservering is geannuleerd. Tot snel.', en: 'Your reservation has been cancelled. See you soon.' },
+    'c.confirm':      { nl: 'Ja, annuleer',               en: 'Yes, cancel it' },
+    'c.keep':         { nl: 'Behouden',                   en: 'Keep reservation' },
+    'c.not_found':    { nl: 'We konden deze reservering niet vinden of de link is verlopen.', en: 'We could not find this reservation, or the link has expired.' },
+    'c.home':         { nl: 'Naar de homepagina',         en: 'Back to homepage' },
 
     // Step 1: service
     'r.s1.kicker':    { nl: 'Stap 01 van 05',           en: 'Step 01 of 05' },

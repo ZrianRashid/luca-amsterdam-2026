@@ -945,7 +945,7 @@ function Summary({ service, duration, massageType, date, time, guests, addons })
 }
 
 // ── Confirmed ──
-function Confirmed({ booking, refCode }) {
+function Confirmed({ booking, refCode, cancelUrl }) {
   const lang = useLang();
   const svc = SERVICES.find((s) => s.id === booking.service);
   const dayName = booking.date ? window.LucaI18n.fmtWeekday(booking.date, lang) : '';
@@ -990,9 +990,16 @@ function Confirmed({ booking, refCode }) {
       <p className="confirm__sub">{t('r.ok.sub', lang)}</p>
 
       <div className="confirm__actions">
-        <a href="LUCA Amsterdam.html" className="btn btn--ghost"><span>{t('r.ok.home', lang)}</span></a>
+        <a href="index.html" className="btn btn--ghost"><span>{t('r.ok.home', lang)}</span></a>
         <button className="btn btn--primary" onClick={() => window.print()}><span>{t('r.ok.save', lang)}</span></button>
       </div>
+
+      {cancelUrl && (
+        <p className="confirm__cancel-line">
+          <span>{t('r.ok.cancel.line', lang)} </span>
+          <a href={cancelUrl}>{t('r.ok.cancel.cta', lang)}</a>
+        </p>
+      )}
 
       <div className="confirm__upsells">
         <a href="#" className="upsell-card">
@@ -1063,6 +1070,9 @@ function ReserveApp() {
   const [consent, setConsent] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
   const [refCode, setRefCode] = useState('');
+  const [cancelUrl, setCancelUrl] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState(null);
   const [layout, setLayout] = useState('split');
   const [dismissedHints, setDismissedHints] = useState(() => {
     try { return JSON.parse(localStorage.getItem('luca-dismissed-hints') || '[]'); }
@@ -1110,14 +1120,51 @@ function ReserveApp() {
     }
   }, [stepIdx, booking, consent]);
 
+  const submitBooking = async () => {
+    setSubmitError(null);
+    setSubmitting(true);
+    try {
+      const svcDef = SERVICES.find(s => s.id === booking.service);
+      const startAt = composeStartAt(booking.date, booking.time);
+      const totalEuros = priceFor(svcDef, booking.duration, booking.addons, booking.guests, booking.massageType);
+      const payload = {
+        serviceId: booking.service,
+        startAt,
+        guests: booking.guests,
+        addonIds: booking.addons,
+        totalCents: Math.round(totalEuros * 100),
+        notes: booking.details.notes || null,
+        customer: {
+          email: booking.details.email,
+          fullName: [booking.details.firstName, booking.details.lastName].filter(Boolean).join(' ').trim() || null,
+          phone: booking.details.phone || null,
+          language: lang,
+          marketingConsent: false,
+        },
+      };
+      const res = await fetch('/.netlify/functions/create-booking', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data?.error || ('HTTP ' + res.status));
+      setRefCode(data.reference);
+      setCancelUrl(data.cancelUrl || '');
+      try { localStorage.setItem('luca-prev-confirmed', '1'); } catch {}
+      try { localStorage.removeItem('luca-booking-v2'); } catch {}
+      setConfirmed(true);
+    } catch (e) {
+      console.error('booking submit failed', e);
+      setSubmitError(e.message || 'submit-failed');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   const next = () => {
     if (stepIdx < STEPS.length - 1) setStepIdx(stepIdx + 1);
-    else {
-      const code = 'LUC-' + Math.random().toString(36).slice(2, 7).toUpperCase();
-      setRefCode(code);
-      try { localStorage.setItem('luca-prev-confirmed', '1'); } catch {}
-      setConfirmed(true);
-    }
+    else if (!submitting) submitBooking();
   };
   const back = () => setStepIdx(Math.max(0, stepIdx - 1));
 
@@ -1179,7 +1226,7 @@ function ReserveApp() {
       <>
         <StageBg />
         <TopBar stepIdx={STEPS.length} />
-        <Confirmed booking={booking} refCode={refCode} />
+        <Confirmed booking={booking} refCode={refCode} cancelUrl={cancelUrl} />
       </>
     );
   }
@@ -1251,16 +1298,37 @@ function ReserveApp() {
 
       <TrustStrip />
 
+      {submitError && (
+        <div className="submit-error" role="alert">
+          {t('r.err.submit', lang)} <button type="button" className="submit-error__dismiss" onClick={() => setSubmitError(null)} aria-label="Dismiss">×</button>
+        </div>
+      )}
+
       <footer className="flow-footer">
-        <button className="btn btn--ghost" onClick={back} disabled={stepIdx === 0}>
+        <button className="btn btn--ghost" onClick={back} disabled={stepIdx === 0 || submitting}>
           <span>{t('r.back', lang)}</span>
         </button>
-        <button className="btn btn--primary" onClick={next} disabled={!canAdvance}>
-          <span>{stepIdx === STEPS.length - 1 ? t('r.confirm', lang) : t('r.continue', lang)}</span>
+        <button className="btn btn--primary" onClick={next} disabled={!canAdvance || submitting}>
+          <span>
+            {submitting
+              ? t('r.submitting', lang)
+              : stepIdx === STEPS.length - 1
+                ? t('r.confirm', lang)
+                : t('r.continue', lang)}
+          </span>
         </button>
       </footer>
     </>
   );
+}
+
+// Compose a UTC ISO timestamp from a local Date + "HH:MM" time string.
+function composeStartAt(date, time) {
+  if (!date || !time) return null;
+  const [h, m] = time.split(':').map(Number);
+  const d = new Date(date);
+  d.setHours(h, m, 0, 0);
+  return d.toISOString();
 }
 
 window.__ReserveApp = ReserveApp;

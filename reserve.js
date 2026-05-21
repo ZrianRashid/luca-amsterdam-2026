@@ -1215,7 +1215,8 @@ function Summary({
 // ── Confirmed ──
 function Confirmed({
   booking,
-  refCode
+  refCode,
+  cancelUrl
 }) {
   const lang = useLang();
   const svc = SERVICES.find(s => s.id === booking.service);
@@ -1274,12 +1275,16 @@ function Confirmed({
   }, t('r.ok.sub', lang)), /*#__PURE__*/React.createElement("div", {
     className: "confirm__actions"
   }, /*#__PURE__*/React.createElement("a", {
-    href: "LUCA Amsterdam.html",
+    href: "index.html",
     className: "btn btn--ghost"
   }, /*#__PURE__*/React.createElement("span", null, t('r.ok.home', lang))), /*#__PURE__*/React.createElement("button", {
     className: "btn btn--primary",
     onClick: () => window.print()
-  }, /*#__PURE__*/React.createElement("span", null, t('r.ok.save', lang)))), /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("span", null, t('r.ok.save', lang)))), cancelUrl && /*#__PURE__*/React.createElement("p", {
+    className: "confirm__cancel-line"
+  }, /*#__PURE__*/React.createElement("span", null, t('r.ok.cancel.line', lang), " "), /*#__PURE__*/React.createElement("a", {
+    href: cancelUrl
+  }, t('r.ok.cancel.cta', lang))), /*#__PURE__*/React.createElement("div", {
     className: "confirm__upsells"
   }, /*#__PURE__*/React.createElement("a", {
     href: "#",
@@ -1363,6 +1368,9 @@ function ReserveApp() {
   const [consent, setConsent] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
   const [refCode, setRefCode] = useState('');
+  const [cancelUrl, setCancelUrl] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState(null);
   const [layout, setLayout] = useState('split');
   const [dismissedHints, setDismissedHints] = useState(() => {
     try {
@@ -1422,15 +1430,55 @@ function ReserveApp() {
         return false;
     }
   }, [stepIdx, booking, consent]);
-  const next = () => {
-    if (stepIdx < STEPS.length - 1) setStepIdx(stepIdx + 1);else {
-      const code = 'LUC-' + Math.random().toString(36).slice(2, 7).toUpperCase();
-      setRefCode(code);
+  const submitBooking = async () => {
+    setSubmitError(null);
+    setSubmitting(true);
+    try {
+      const svcDef = SERVICES.find(s => s.id === booking.service);
+      const startAt = composeStartAt(booking.date, booking.time);
+      const totalEuros = priceFor(svcDef, booking.duration, booking.addons, booking.guests, booking.massageType);
+      const payload = {
+        serviceId: booking.service,
+        startAt,
+        guests: booking.guests,
+        addonIds: booking.addons,
+        totalCents: Math.round(totalEuros * 100),
+        notes: booking.details.notes || null,
+        customer: {
+          email: booking.details.email,
+          fullName: [booking.details.firstName, booking.details.lastName].filter(Boolean).join(' ').trim() || null,
+          phone: booking.details.phone || null,
+          language: lang,
+          marketingConsent: false
+        }
+      };
+      const res = await fetch('/.netlify/functions/create-booking', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data?.error || 'HTTP ' + res.status);
+      setRefCode(data.reference);
+      setCancelUrl(data.cancelUrl || '');
       try {
         localStorage.setItem('luca-prev-confirmed', '1');
       } catch {}
+      try {
+        localStorage.removeItem('luca-booking-v2');
+      } catch {}
       setConfirmed(true);
+    } catch (e) {
+      console.error('booking submit failed', e);
+      setSubmitError(e.message || 'submit-failed');
+    } finally {
+      setSubmitting(false);
     }
+  };
+  const next = () => {
+    if (stepIdx < STEPS.length - 1) setStepIdx(stepIdx + 1);else if (!submitting) submitBooking();
   };
   const back = () => setStepIdx(Math.max(0, stepIdx - 1));
 
@@ -1496,7 +1544,8 @@ function ReserveApp() {
       stepIdx: STEPS.length
     }), /*#__PURE__*/React.createElement(Confirmed, {
       booking: booking,
-      refCode: refCode
+      refCode: refCode,
+      cancelUrl: cancelUrl
     }));
   }
   return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(StageBg, null), /*#__PURE__*/React.createElement(TopBar, {
@@ -1601,16 +1650,33 @@ function ReserveApp() {
     time: booking.time,
     guests: booking.guests,
     addons: booking.addons
-  })), /*#__PURE__*/React.createElement(TrustStrip, null), /*#__PURE__*/React.createElement("footer", {
+  })), /*#__PURE__*/React.createElement(TrustStrip, null), submitError && /*#__PURE__*/React.createElement("div", {
+    className: "submit-error",
+    role: "alert"
+  }, t('r.err.submit', lang), " ", /*#__PURE__*/React.createElement("button", {
+    type: "button",
+    className: "submit-error__dismiss",
+    onClick: () => setSubmitError(null),
+    "aria-label": "Dismiss"
+  }, "\xD7")), /*#__PURE__*/React.createElement("footer", {
     className: "flow-footer"
   }, /*#__PURE__*/React.createElement("button", {
     className: "btn btn--ghost",
     onClick: back,
-    disabled: stepIdx === 0
+    disabled: stepIdx === 0 || submitting
   }, /*#__PURE__*/React.createElement("span", null, t('r.back', lang))), /*#__PURE__*/React.createElement("button", {
     className: "btn btn--primary",
     onClick: next,
-    disabled: !canAdvance
-  }, /*#__PURE__*/React.createElement("span", null, stepIdx === STEPS.length - 1 ? t('r.confirm', lang) : t('r.continue', lang)))));
+    disabled: !canAdvance || submitting
+  }, /*#__PURE__*/React.createElement("span", null, submitting ? t('r.submitting', lang) : stepIdx === STEPS.length - 1 ? t('r.confirm', lang) : t('r.continue', lang)))));
+}
+
+// Compose a UTC ISO timestamp from a local Date + "HH:MM" time string.
+function composeStartAt(date, time) {
+  if (!date || !time) return null;
+  const [h, m] = time.split(':').map(Number);
+  const d = new Date(date);
+  d.setHours(h, m, 0, 0);
+  return d.toISOString();
 }
 window.__ReserveApp = ReserveApp;

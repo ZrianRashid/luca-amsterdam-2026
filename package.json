@@ -1,7 +1,25 @@
 {
+  "name": "luca-amsterdam",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "npm run build:reserve && npm run build:admin && npm run build:tweaks",
+    "build:reserve": "babel reserve.jsx --out-file reserve.js && babel reserve-tweaks.jsx --out-file reserve-tweaks.js",
+    "build:admin": "babel admin.jsx --out-file admin.js",
+    "build:tweaks": "babel tweaks-panel.jsx --out-file tweaks-panel.js && babel tweaks-app.jsx --out-file tweaks-app.js",
+    "watch:reserve": "babel reserve.jsx --out-file reserve.js --watch",
+    "watch:admin": "babel admin.jsx --out-file admin.js --watch"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.46.1",
+    "resend": "^4.0.1"
+  },
   "devDependencies": {
     "@babel/cli": "^7.28.6",
     "@babel/core": "^7.29.0",
     "@babel/preset-react": "^7.28.5"
+  },
+  "babel": {
+    "presets": [["@babel/preset-react", { "runtime": "classic" }]]
   }
 }

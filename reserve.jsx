@@ -333,7 +333,7 @@ function timeSlotsFor(date, lang) {
 function priceFor(svc, dur, addons, guests, massageType) {
   if (!svc || !dur) return 0;
   let base = dur.price;
-  if (svc.id === 'massage' && massageType === 'deep') base += 10;
+  if (svc.id.startsWith('deep') && massageType === 'deep') base += 10;
   let total = svc.requiresGuests ? base : base * guests;
   for (const a of addons) {
     const def = ADDONS.find((x) => x.id === a);
@@ -411,11 +411,11 @@ function getSmartHint({ stepIdx, service, duration, date, time, guests, isReturn
   // STEP 0 — Service step
   if (stepIdx === 0) {
     // First-time user picks 30-min sauna — nudge to 60-min sweet spot
-    if (!isReturning && service === 'sauna' && duration?.min === 30 && !fired('hint-short')) {
+    if (!isReturning && service && service.startsWith('sauna') && duration?.min === 30 && !fired('hint-short')) {
       return { id: 'hint-short', headlineKey: 'r.hint.short.h', bodyKey: 'r.hint.short.b' };
     }
     // Single-person 60-min sauna — suggest 5-pass card
-    if (service === 'sauna' && duration?.min === 60 && !fired('hint-rittenkaart')) {
+    if (service && service.startsWith('sauna') && duration?.min === 60 && !fired('hint-rittenkaart')) {
       return {
         id: 'hint-rittenkaart',
         headlineKey: 'r.hint.rittenkaart.h',
@@ -425,7 +425,7 @@ function getSmartHint({ stepIdx, service, duration, date, time, guests, isReturn
       };
     }
     // Massage selected — offer combo
-    if (service === 'massage' && !fired('hint-massagecombo')) {
+    if (service && (service.startsWith('relax') || service.startsWith('deep') || service === 'buccal' || service === 'cupping') && !fired('hint-massagecombo')) {
       return { id: 'hint-massagecombo', headlineKey: 'r.hint.massagecombo.h', bodyKey: 'r.hint.massagecombo.b' };
     }
   }
@@ -439,7 +439,7 @@ function getSmartHint({ stepIdx, service, duration, date, time, guests, isReturn
   }
 
   // STEP 2 — Time step
-  if (stepIdx === 2 && time && isOffPeak(date, time) && service === 'sauna' && !fired('hint-daluren')) {
+  if (stepIdx === 2 && time && isOffPeak(date, time) && service && service.startsWith('sauna') && !fired('hint-daluren')) {
     return {
       id: 'hint-daluren',
       headlineKey: 'r.hint.daluren.h',
@@ -449,12 +449,12 @@ function getSmartHint({ stepIdx, service, duration, date, time, guests, isReturn
     };
   }
 
-  // STEP 3 — Guests step
-  if (stepIdx === 3) {
-    if (service === 'prive' && guests <= 2 && !fired('hint-privesmall')) {
+  // STEP 3 — Guest step
+  if (stepIdx === 3 && service) {
+    if (service.startsWith('prive') && guests <= 2 && !fired('hint-privesmall')) {
       return { id: 'hint-privesmall', headlineKey: 'r.hint.privesmall.h', bodyKey: 'r.hint.privesmall.b' };
     }
-    if (service === 'sauna' && guests >= 4 && !fired('hint-upgradeprive')) {
+    if (service.startsWith('sauna') && guests >= 4 && !fired('hint-upgradeprive')) {
       return {
         id: 'hint-upgradeprive',
         headlineKey: 'r.hint.upgradeprive.h',
@@ -1012,8 +1012,8 @@ function Confirmed({ booking, refCode }) {
 
 const initialBooking = (() => {
   const defaults = {
-    service: 'sauna',
-    duration: SERVICES.find((s) => s.id === 'sauna').durations[1], // 60 min default
+    service: 'sauna60',
+    duration: SERVICES.find((s) => s.id === 'sauna60').durations[0], // 60 min default
     massageType: 'ontspanning',
     date: null,
     time: null,
@@ -1041,7 +1041,7 @@ const initialBooking = (() => {
   return defaults;
 })();
 
-// URL param prefill: ?service=sauna|massage|prive|buccal
+// URL param prefill: ?service=sauna30|sauna60|sauna90|privedate2|privedate46|etc
 (function applyUrlPrefill() {
   try {
     const params = new URLSearchParams(window.location.search);
@@ -1049,7 +1049,7 @@ const initialBooking = (() => {
     if (svc && SERVICES.find((s) => s.id === svc)) {
       const s = SERVICES.find((x) => x.id === svc);
       initialBooking.service = svc;
-      initialBooking.duration = s.durations[1] || s.durations[0];
+      initialBooking.duration = s.durations[0];
     }
   } catch {}
 })();
@@ -1138,8 +1138,8 @@ function ReserveApp() {
 
   const handleHintAction = (action) => {
     if (action === 'upgrade-to-prive') {
-      const prive = SERVICES.find((s) => s.id === 'prive');
-      setBooking({ ...booking, service: 'prive', duration: prive.durations[0] });
+      const prive = SERVICES.find((s) => s.id === 'privedate2');
+      setBooking({ ...booking, service: 'privedate2', duration: prive.durations[0] });
       setStepIdx(0);
       dismissHint('hint-upgradeprive');
     }
@@ -1148,8 +1148,8 @@ function ReserveApp() {
   const resetBooking = () => {
     try { localStorage.removeItem('luca-booking-v2'); } catch {}
     setBooking({
-      service: 'sauna',
-      duration: SERVICES.find((s) => s.id === 'sauna').durations[1],
+      service: 'sauna60',
+      duration: SERVICES.find((s) => s.id === 'sauna60').durations[0],
       massageType: 'ontspanning',
       date: null,
       time: null,

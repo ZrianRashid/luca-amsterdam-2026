@@ -40,7 +40,7 @@ Cache-Control = "public, max-age=86400, stale-while-revalidate=31536000"
 for = "/*.js"
 
 [headers.values]
-Cache-Control = "public, max-age=86400, stale-while-revalidate=31536000"
+Cache-Control = "public, max-age=3600, must-revalidate"
 
 [[headers]]
 for = "/*.html"

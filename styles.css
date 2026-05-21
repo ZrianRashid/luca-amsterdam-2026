@@ -178,7 +178,8 @@ img { max-width: 100%; display: block; }
   z-index: 0;
 }
 
-.hero__motion-img {
+.hero__motion-img,
+.hero__video {
   position: absolute;
   inset: 0;
   width: 100%;

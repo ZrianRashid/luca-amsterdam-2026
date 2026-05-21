@@ -10,6 +10,7 @@ publish = "/Users/zrianrashid/luca-amsterdam-new"
 publishOrigin = "config"
 
 [build.environment]
+NODE_VERSION = "22"
 
 [build.processing]
 
@@ -43,12 +44,6 @@ Cache-Control = "public, max-age=86400, stale-while-revalidate=31536000"
 
 [[headers]]
 for = "/*.html"
-
-[headers.values]
-Cache-Control = "public, max-age=0, must-revalidate"
-
-[[headers]]
-for = "/reserve.html"
 
 [headers.values]
 Cache-Control = "public, max-age=0, must-revalidate"

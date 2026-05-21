@@ -551,7 +551,9 @@ function StepService({ service, duration, massageType, onService, onDuration, on
           return (
             <div key={cat.id} className={`svc-cat ${catSelected ? 'is-open' : ''}`}>
               <button type="button" className="svc-cat__header" onClick={() => {
+                console.log('Category clicked:', cat.id, 'catSelected:', catSelected, 'current service:', service);
                 if (!catSelected) {
+                  console.log('Selecting service:', catServices[0].id);
                   onService(catServices[0].id);
                   onDuration(catServices[0].durations[0]);
                 }

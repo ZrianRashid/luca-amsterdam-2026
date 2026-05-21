@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Voorzieningen · LUCA Amsterdam</title>
+<meta name="description" content="Onze sauna, ijsbaden, massageruimtes en gemeenschappelijke huiskamer — alles wat LUCA te bieden heeft.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Cormorant:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&family=Marcellus&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+/* ── PAGE HEADER ─────────────────────────────────────────── */
+.page-hero {
+  position: relative;
+  height: 56vh;
+  min-height: 400px;
+  display: flex;
+  align-items: flex-end;
+  padding: 0 0 72px;
+  overflow: hidden;
+}
+.page-hero__bg {
+  position: absolute;
+  inset: 0;
+  background: url('assets/hero-seedance.webm') center/cover no-repeat;
+  filter: brightness(0.45);
+}
+.page-hero__veil { position: absolute; inset: 0; background: linear-gradient(to top, rgba(26,23,20,0.85) 0%, rgba(26,23,20,0.2) 60%, transparent 100%); }
+.page-hero__content { position: relative; z-index: 1; width: 100%; max-width: 1100px; margin: 0 auto; padding: 0 40px; }
+.page-hero__eyebrow { font-family: var(--ui); font-size: 11px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; }
+.page-hero__title { font-family: var(--display); font-size: clamp(48px, 7vw, 88px); font-style: italic; line-height: 0.95; color: var(--cream); font-weight: 400; }
+.page-hero__title em { color: var(--gold); font-style: normal; }
+.page-hero__sub { font-family: var(--body); font-size: 17px; color: rgba(246,243,236,0.7); margin-top: 20px; max-width: 480px; }
+
+/* ── INTRO ──────────────────────────────────────────────── */
+.facilities-intro {
+  padding: 80px 40px;
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: start;
+}
+.facilities-intro__text {}
+.facilities-intro__text h2 { font-family: var(--display); font-size: clamp(36px, 4vw, 56px); font-style: italic; color: var(--dark); font-weight: 400; line-height: 1.05; }
+.facilities-intro__text h2 em { color: var(--gold); font-style: normal; }
+.facilities-intro__text p { font-family: var(--body); font-size: 17px; line-height: 1.7; color: var(--mute); margin-top: 20px; }
+.facilities-intro__stats { display: flex; flex-direction: column; gap: 32px; padding-top: 8px; }
+.stat { border-left: 1px solid var(--gold-line); padding-left: 24px; }
+.stat__number { font-family: var(--display); font-size: 56px; font-style: italic; color: var(--dark); line-height: 1; }
+.stat__label { font-family: var(--ui); font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--mute); margin-top: 6px; }
+
+/* ── FACILITY CARDS ─────────────────────────────────────── */
+.facilities-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-top: 1px solid var(--line);
+}
+.facility-card {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 3/4;
+  cursor: default;
+}
+.facility-card__bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.7s var(--ease), filter 0.7s var(--ease);
+}
+.facility-card:hover .facility-card__bg { transform: scale(1.04); filter: brightness(0.7); }
+.facility-card__veil { position: absolute; inset: 0; background: linear-gradient(to top, rgba(26,23,20,0.9) 0%, rgba(26,23,20,0.1) 50%, transparent 100%); }
+.facility-card__content { position: absolute; bottom: 0; left: 0; right: 0; padding: 32px; }
+.facility-card__num { font-family: var(--ui); font-size: 11px; letter-spacing: 0.2em; color: var(--gold); margin-bottom: 8px; }
+.facility-card__name { font-family: var(--display); font-size: 32px; font-style: italic; color: var(--cream); line-height: 1.1; }
+.facility-card__desc { font-family: var(--body); font-size: 14px; color: rgba(246,243,236,0.65); margin-top: 10px; line-height: 1.6; }
+.facility-card__price { font-family: var(--ui); font-size: 13px; color: var(--gold); margin-top: 14px; letter-spacing: 0.05em; }
+
+/* ── SAUNA DETAIL ───────────────────────────────────────── */
+.sauna-detail {
+  padding: 100px 40px;
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+.sauna-detail__media {
+  position: relative;
+  aspect-ratio: 4/3;
+  overflow: hidden;
+  border-radius: 2px;
+}
+.sauna-detail__media img, .sauna-detail__media video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.sauna-detail__media-label {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: var(--gold);
+  color: var(--dark);
+  font-family: var(--ui);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 6px 12px;
+}
+.sauna-detail__text {}
+.sauna-detail__text h2 { font-family: var(--display); font-size: clamp(32px, 3.5vw, 52px); font-style: italic; color: var(--dark); font-weight: 400; line-height: 1.1; }
+.sauna-detail__text h2 em { color: var(--gold); font-style: normal; }
+.sauna-detail__text p { font-family: var(--body); font-size: 16px; line-height: 1.8; color: var(--mute); margin-top: 20px; }
+.sauna-detail__features { margin-top: 32px; display: flex; flex-direction: column; gap: 12px; }
+.sauna-detail__feature { display: flex; align-items: center; gap: 14px; }
+.sauna-detail__feature-dot { width: 6px; height: 6px; background: var(--gold); border-radius: 50%; flex-shrink: 0; }
+.sauna-detail__feature span { font-family: var(--ui); font-size: 14px; color: var(--dark); }
+
+/* ── HOUSE RULES STRIP ──────────────────────────────────── */
+.rules-strip {
+  background: var(--dark-2);
+  padding: 80px 40px;
+  text-align: center;
+}
+.rules-strip h2 { font-family: var(--display); font-size: clamp(28px, 3vw, 44px); font-style: italic; color: var(--cream); font-weight: 400; }
+.rules-strip p { font-family: var(--body); color: rgba(246,243,236,0.55); margin-top: 16px; font-size: 16px; }
+.rules-strip a { display: inline-block; margin-top: 32px; background: var(--gold); color: var(--dark); font-family: var(--ui); font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase; padding: 14px 32px; text-decoration: none; transition: opacity 0.2s; }
+.rules-strip a:hover { opacity: 0.85; }
+
+/* ── OPENING SECTION ────────────────────────────────────── */
+.opening-section {
+  padding: 80px 40px;
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+}
+.opening-section h2 { font-family: var(--display); font-size: clamp(28px, 3vw, 44px); font-style: italic; color: var(--dark); font-weight: 400; line-height: 1.1; }
+.opening-section h2 em { color: var(--gold); font-style: normal; }
+.hours-grid { display: flex; flex-direction: column; gap: 0; margin-top: 28px; }
+.hours-row { display: flex; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid var(--line); font-family: var(--body); font-size: 15px; }
+.hours-row span:first-child { color: var(--dark); }
+.hours-row span:last-child { color: var(--mute); }
+.hours-row.today span:first-child { color: var(--gold); font-weight: 600; }
+.contact-block { display: flex; flex-direction: column; gap: 20px; margin-top: 28px; }
+.contact-item { display: flex; gap: 16px; align-items: center; }
+.contact-item__icon { width: 40px; height: 40px; background: var(--cream-2); display: flex; align-items: center; justify-content: center; font-size: 18px; border-radius: 50%; flex-shrink: 0; }
+.contact-item__text { font-family: var(--body); font-size: 15px; color: var(--dark); }
+.contact-item__text a { color: var(--dark); text-decoration: none; }
+.contact-item__text small { font-family: var(--ui); font-size: 11px; color: var(--mute); text-transform: uppercase; letter-spacing: 0.1em; display: block; margin-bottom: 2px; }
+
+/* ── CTA STRIP ───────────────────────────────────────────── */
+.cta-strip {
+  background: var(--dark);
+  padding: 100px 40px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.cta-strip h2 { font-family: var(--display); font-size: clamp(36px, 5vw, 72px); font-style: italic; color: var(--cream); font-weight: 400; line-height: 1; }
+.cta-strip p { font-family: var(--body); font-size: 17px; color: rgba(246,243,236,0.55); margin-top: 20px; max-width: 480px; }
+.cta-strip__buttons { margin-top: 36px; display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
+.btn-primary { background: var(--gold); color: var(--dark); font-family: var(--ui); font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; padding: 16px 36px; text-decoration: none; display: inline-block; transition: opacity 0.2s; }
+.btn-primary:hover { opacity: 0.85; }
+.btn-secondary { border: 1px solid rgba(246,243,236,0.3); color: var(--cream); font-family: var(--ui); font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; padding: 16px 36px; text-decoration: none; display: inline-block; transition: border-color 0.2s; }
+.btn-secondary:hover { border-color: var(--gold); color: var(--gold); }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav" id="mainNav">
+  <a href="index.html" class="nav__logo">LUCA</a>
+  <ul class="nav__links">
+    <li><a href="voorzieningen.html">Voorzieningen</a></li>
+    <li><a href="prijzen.html">Prijzen</a></li>
+    <li><a href="over-luca.html">Over LUCA</a></li>
+    <li><a href="locatie.html">Bezoek</a></li>
+  </ul>
+  <div class="nav__right">
+    <button class="nav__lang" data-lang="nl">NL</button>
+    <span style="color:var(--cream);opacity:0.3">·</span>
+    <button class="nav__lang" data-lang="en">EN</button>
+    <a href="reserve.html" class="nav__cta">Boek nu</a>
+  </div>
+</nav>
+
+<!-- PAGE HERO -->
+<section class="page-hero">
+  <div class="page-hero__bg" style="background: url('assets/hero-seedance.webm') center/cover no-repeat;"></div>
+  <div class="page-hero__veil"></div>
+  <div class="page-hero__content">
+    <p class="page-hero__eyebrow">Voorzieningen · LUCA Amsterdam</p>
+    <h1 class="page-hero__title">Opwarmen,<br><em>afkoelen,</em><br>opladen.</h1>
+    <p class="page-hero__sub">Drie ruimtes, één ritueel. Alles wat je nodig hebt om je evenwicht te vinden — en niets dat je afleidt.</p>
+  </div>
+</section>
+
+<!-- INTRO -->
+<section class="facilities-intro">
+  <div class="facilities-intro__text">
+    <h2>Alles wat je<br><em>nodig hebt.</em></h2>
+    <p>LUCA is ontworpen als één vloeiende ervaring: loop van de sauna naar het ijsbad, rust uit in de huiskamer, boek een massage — en begin het ritueel opnieuw. Geen losse compartimenten, maar een doordachte route langs warmte, koude en rust.</p>
+    <p style="margin-top:16px;">Badkleding is overal verplicht. Handdoeken, slippers en een locker zijn bij elke sessie inbegrepen.</p>
+  </div>
+  <div class="facilities-intro__stats">
+    <div class="stat">
+      <div class="stat__number">3</div>
+      <div class="stat__label">Saunaruimtes</div>
+    </div>
+    <div class="stat">
+      <div class="stat__number">2</div>
+      <div class="stat__label">Ijsbaden</div>
+    </div>
+    <div class="stat">
+      <div class="stat__number">4</div>
+      <div class="stat__label">Massageruimtes</div>
+    </div>
+    <div class="stat">
+      <div class="stat__number">1</div>
+      <div class="stat__label">Huiskamer & bar</div>
+    </div>
+  </div>
+</section>
+
+<!-- FACILITY GRID -->
+<section class="facilities-grid">
+  <div class="facility-card">
+    <div class="facility-card__bg" style="background: url('assets/card-sauna.webp') center/cover;"></div>
+    <div class="facility-card__veil"></div>
+    <div class="facility-card__content">
+      <p class="facility-card__num">01</p>
+      <h3 class="facility-card__name">Sauna &<br>IJsbad</h3>
+      <p class="facility-card__desc">Bio-sauna, infraroodcabine en twee ijsbaden. De klassieke cyclus: warm, koud, rust, herhaal.</p>
+      <p class="facility-card__price">Vanaf €19 · 30 / 60 / 90 min</p>
+    </div>
+  </div>
+  <div class="facility-card">
+    <div class="facility-card__bg" style="background: url('assets/card-massage.webp') center/cover;"></div>
+    <div class="facility-card__veil"></div>
+    <div class="facility-card__content">
+      <p class="facility-card__num">02</p>
+      <h3 class="facility-card__name">Massages</h3>
+      <p class="facility-card__desc">Ontspanning, deep tissue, cupping, meridiaan en buccale massage. Combineerbaar met sauna.</p>
+      <p class="facility-card__price">Vanaf €50 · 30 / 60 / 90 min</p>
+    </div>
+  </div>
+  <div class="facility-card">
+    <div class="facility-card__bg" style="background: url('assets/card-prive.webp') center/cover;"></div>
+    <div class="facility-card__veil"></div>
+    <div class="facility-card__content">
+      <p class="facility-card__num">03</p>
+      <h3 class="facility-card__name">LUCA<br>Privé</h3>
+      <p class="facility-card__desc">De ruimte voor jou alleen, of met vrienden en collega's. Tot zeven personen. Exclusief.</p>
+      <p class="facility-card__price">Vanaf €89,95 · 2–7 personen</p>
+    </div>
+  </div>
+</section>
+
+<!-- SAUNA DETAIL -->
+<section class="sauna-detail">
+  <div class="sauna-detail__media">
+    <video src="assets/sauna.webm" autoplay muted loop playsinline></video>
+    <div class="sauna-detail__media-label">Bio-sauna · 70–80°C</div>
+  </div>
+  <div class="sauna-detail__text">
+    <h2>De cyclus die<br><em>alles geneest.</em></h2>
+    <p>Twaalf minuten sauna, drie minuten ijsbad, twintig minuten rust in de huiskamer. Dat is het ritueel. De vierde ronde is helemaal van jou.</p>
+    <p>Onze bio-sauna wordt verwarmd met een houtkachel — geen industriële installatie, gewoon warmte die aanvoelt zoals warmte hoort te voelen. De ijsbaden zijn groot genoeg voor een volledige onderdompeling. En de huiskamer? Dat is waar de cirkel rond wordt.</p>
+    <div class="sauna-detail__features">
+      <div class="sauna-detail__feature"><div class="sauna-detail__feature-dot"></div><span>Houtgestookte bio-sauna (70–80°C)</span></div>
+      <div class="sauna-detail__feature"><div class="sauna-detail__feature-dot"></div><span>Infraroodcabine (laag-emissie)</span></div>
+      <div class="sauna-detail__feature"><div class="sauna-detail__feature-dot"></div><span>Twee ijsbaden (4–8°C)</span></div>
+      <div class="sauna-detail__feature"><div class="sauna-detail__feature-dot"></div><span>Dompelton en buitendouche</span></div>
+      <div class="sauna-detail__feature"><div class="sauna-detail__feature-dot"></div><span>Koudeborrel of handgesneden ijsblokjes</span></div>
+      <div class="sauna-detail__feature"><div class="sauna-detail__feature-dot"></div><span>Thee en water in de huiskamer</span></div>
+    </div>
+    <a href="reserve.html?service=sauna" class="btn-primary" style="margin-top:32px;display:inline-block;">Boek een sessie</a>
+  </div>
+</section>
+
+<!-- MASSAGE DETAIL -->
+<section class="sauna-detail" style="direction:rtl;">
+  <div class="sauna-detail__media" style="direction:ltr;">
+    <video src="assets/massage.webm" autoplay muted loop playsinline></video>
+    <div class="sauna-detail__media-label">Massageruimtes · 4 ruimtes</div>
+  </div>
+  <div class="sauna-detail__text" style="direction:ltr;">
+    <h2>Met de handen<br><em>die het weten.</em></h2>
+    <p>Vijf massagetypes, vier ruimtes, één therapeutische visie: pijn verlichten door spanning los te laten. Van sportmassage tot een zachte buccale behandeling die van binnenuit werkt.</p>
+    <p>Alle massages worden op een verwarmde tafel uitgevoerd, met eigen kruidenoliën afgestemd op je behandeling. Je kunt vooraf of achteraf boeken —-massages zijn ook spontaan mogelijk als er ruimte is.</p>
+    <div class="sauna-detail__features">
+      <div class="sauna-detail__feature"><div class="sauna-detail__feature-dot"></div><span>Ontspanningsmassage — voor volledige rust</span></div>
+      <div class="sauna-detail__feature"><div class="sauna-detail__feature-dot"></div><span>Deep Tissue — gericht op diep spanningsbovenliggers</span></div>
+      <div class="sauna-detail__feature"><div class="sauna-detail__feature-dot"></div><span>Meridiaanmassage — Oosterse energiebanen</span></div>
+      <div class="sauna-detail__feature"><div class="sauna-detail__feature-dot"></div><span>Cupping — vacuümtherapie voor-doorbloeding</span></div>
+      <div class="sauna-detail__feature"><div class="sauna-detail__feature-dot"></div><span>Buccale massage — van binnenuit de kaakspieren</span></div>
+      <div class="sauna-detail__feature"><div class="sauna-detail__feature-dot"></div><span>Maderotherapie — houten instrumenten,跨境</span></div>
+    </div>
+    <a href="reserve.html?service=massage" class="btn-primary" style="margin-top:32px;display:inline-block;">Boek een massage</a>
+  </div>
+</section>
+
+<!-- HOUSE RULES -->
+<div class="rules-strip">
+  <h2>Alles wat je moet weten<br>voor je komt</h2>
+  <p>Van annulering tot kledingvoorschriften — lees de huisregels door.</p>
+  <a href="huisregels.html">Huisregels lezen</a>
+</div>
+
+<!-- OPENING HOURS + CONTACT -->
+<section class="opening-section">
+  <div>
+    <h2>Openingstijden<br>en <em>bereikbaarheid.</em></h2>
+    <div class="hours-grid">
+      <div class="hours-row"><span>Maandag – Vrijdag</span><span>09:00 – 21:00</span></div>
+      <div class="hours-row"><span>Zaterdag</span><span>10:00 – 19:00</span></div>
+      <div class="hours-row"><span>Zondag</span><span>10:00 – 19:00</span></div>
+      <div class="hours-row" style="border:none;"><span style="color:var(--gold);font-size:12px;font-family:var(--ui);letter-spacing:0.1em;text-transform:uppercase;">Reserveren aanbevolen · Spontaan ook welkom</span><span></span></div>
+    </div>
+  </div>
+  <div>
+    <h2 style="font-size:28px;">Contact</h2>
+    <div class="contact-block">
+      <div class="contact-item">
+        <div class="contact-item__icon">📞</div>
+        <div class="contact-item__text"><small>Telefoon</small>+31 6 43711310</div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-item__icon">✉️</div>
+        <div class="contact-item__text"><small>E-mail</small><a href="mailto:info@luca-amsterdam.nl">info@luca-amsterdam.nl</a></div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-item__icon">📍</div>
+        <div class="contact-item__text"><small>Adres</small>Zeeburgerkade 1314-1316, Amsterdam</div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-item__icon">📷</div>
+        <div class="contact-item__text"><small>Instagram</small><a href="https://www.instagram.com/amsterdam.luca" target="_blank">@amsterdam.luca</a></div>
+      </div>
+    </div>
+    <a href="locatie.html" class="btn-primary" style="margin-top:28px;display:inline-block;">Route & parkeren</a>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-strip">
+  <h2>Klaar om te<br>boeken?</h2>
+  <p>Reserveren is gratis te annuleren tot 24 uur voor je sessie. Spontaan langskomen kan ook — bel of app.</p>
+  <div class="cta-strip__buttons">
+    <a href="reserve.html" class="btn-primary">Reserveer nu</a>
+    <a href="tel:+31643711310" class="btn-secondary">Bel +31 6 43711310</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer__inner">
+    <div class="footer__brand"><strong>LUCA</strong><p>Boutique wellness aan het water.<br>Amsterdam, sinds 2024.</p></div>
+    <div class="footer__col"><h4>Beleving</h4><ul><li><a href="reserve.html?service=sauna">Sauna & IJsbad</a></li><li><a href="reserve.html?service=massage">Massages</a></li><li><a href="reserve.html?service=prive">LUCA Privé</a></li><li><a href="prijzen.html">Memberships</a></li></ul></div>
+    <div class="footer__col"><h4>Huis</h4><ul><li><a href="over-luca.html">Over LUCA</a></li><li><a href="locatie.html">Locatie & openingstijden</a></li><li><a href="faq.html">Veelgestelde vragen</a></li><li><a href="huisregels.html">Huisregels</a></li></ul></div>
+    <div class="footer__col"><h4>Contact</h4><ul><li><a href="mailto:info@luca-amsterdam.nl">info@luca-amsterdam.nl</a></li><li><a href="tel:+31643711310">+31 6 43711310</a></li><li><a href="https://www.instagram.com/amsterdam.luca">Instagram</a></li></ul></div>
+  </div>
+  <div class="footer__bottom">© MMXXVI · LUCA Amsterdam · Aan het Cruquiuseiland</div>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>

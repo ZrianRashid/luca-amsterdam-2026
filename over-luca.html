@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Over LUCA · Boutique wellness Amsterdam</title>
+<meta name="description" content="LUCA is een boutique wellnessruimte aan het Cruquiuseiland in Amsterdam-Oost. Sauna, ijsbad, massage — en een warme huiskamer.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Cormorant:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&family=Marcellus&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+.page-hero { position: relative; height: 60vh; min-height: 460px; display: flex; align-items: flex-end; padding: 0 0 80px; overflow: hidden; }
+.page-hero__bg { position: absolute; inset: 0; background: url('assets/hero-seedance.webm') center/cover no-repeat; filter: brightness(0.35); }
+.page-hero__veil { position: absolute; inset: 0; background: linear-gradient(to top, rgba(26,23,20,0.9) 0%, rgba(26,23,20,0.15) 55%, transparent 100%); }
+.page-hero__content { position: relative; z-index: 1; width: 100%; max-width: 1100px; margin: 0 auto; padding: 0 40px; }
+.page-hero__eyebrow { font-family: var(--ui); font-size: 11px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; }
+.page-hero__title { font-family: var(--display); font-size: clamp(48px, 7vw, 88px); font-style: italic; line-height: 0.95; color: var(--cream); font-weight: 400; }
+.page-hero__title em { color: var(--gold); font-style: normal; }
+.page-hero__sub { font-family: var(--body); font-size: 17px; color: rgba(246,243,236,0.7); margin-top: 20px; max-width: 500px; }
+.about-story { padding: 100px 40px; max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 100px; align-items: center; }
+.about-story__text h2 { font-family: var(--display); font-size: clamp(36px, 4vw, 56px); font-style: italic; color: var(--dark); font-weight: 400; line-height: 1.1; }
+.about-story__text h2 em { color: var(--gold); font-style: normal; }
+.about-story__text p { font-family: var(--body); font-size: 17px; line-height: 1.8; color: var(--mute); margin-top: 24px; }
+.about-story__media { position: relative; }
+.about-story__media img { width: 100%; aspect-ratio: 4/5; object-fit: cover; display: block; }
+.about-quote { background: var(--dark-2); padding: 100px 40px; text-align: center; display: flex; flex-direction: column; align-items: center; }
+.about-quote blockquote { font-family: var(--display); font-size: clamp(28px, 4vw, 56px); font-style: italic; color: var(--cream); font-weight: 400; line-height: 1.2; max-width: 800px; }
+.about-quote blockquote em { color: var(--gold); font-style: normal; }
+.about-quote cite { display: block; font-family: var(--ui); font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(246,243,236,0.4); margin-top: 28px; font-style: normal; }
+.values-grid { padding: 80px 40px; max-width: 1100px; margin: 0 auto; }
+.values-grid h2 { font-family: var(--display); font-size: clamp(32px, 3.5vw, 52px); font-style: italic; color: var(--dark); font-weight: 400; text-align: center; }
+.values-grid h2 em { color: var(--gold); font-style: normal; }
+.values { display: grid; grid-template-columns: repeat(3, 1fr); gap: 48px; margin-top: 56px; }
+.value h3 { font-family: var(--display); font-size: 26px; font-style: italic; color: var(--dark); }
+.value p { font-family: var(--body); font-size: 15px; color: var(--mute); margin-top: 12px; line-height: 1.7; }
+.value__num { font-family: var(--ui); font-size: 11px; letter-spacing: 0.2em; color: var(--gold); text-transform: uppercase; margin-bottom: 12px; }
+.philosophy-section { background: var(--cream-2); padding: 100px 40px; }
+.philosophy-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+.philosophy-inner h2 { font-family: var(--display); font-size: clamp(32px, 3.5vw, 52px); font-style: italic; color: var(--dark); font-weight: 400; line-height: 1.1; }
+.philosophy-inner h2 em { color: var(--gold); font-style: normal; }
+.philosophy-inner p { font-family: var(--body); font-size: 16px; line-height: 1.8; color: var(--mute); margin-top: 20px; }
+.philosophy-list { margin-top: 32px; display: flex; flex-direction: column; gap: 16px; }
+.philosophy-list li { display: flex; gap: 14px; align-items: flex-start; font-family: var(--body); font-size: 16px; color: var(--dark); }
+.philosophy-list li::before { content: '—'; color: var(--gold); flex-shrink: 0; }
+.cta-strip { background: var(--dark); padding: 100px 40px; text-align: center; display: flex; flex-direction: column; align-items: center; }
+.cta-strip h2 { font-family: var(--display); font-size: clamp(36px, 5vw, 72px); font-style: italic; color: var(--cream); font-weight: 400; line-height: 1; }
+.cta-strip p { font-family: var(--body); font-size: 17px; color: rgba(246,243,236,0.55); margin-top: 20px; max-width: 480px; }
+.cta-strip__buttons { margin-top: 36px; display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
+.btn-primary { background: var(--gold); color: var(--dark); font-family: var(--ui); font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; padding: 16px 36px; text-decoration: none; display: inline-block; }
+.btn-secondary { border: 1px solid rgba(246,243,236,0.3); color: var(--cream); font-family: var(--ui); font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; padding: 16px 36px; text-decoration: none; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="nav__logo">LUCA</a>
+  <ul class="nav__links">
+    <li><a href="voorzieningen.html">Voorzieningen</a></li>
+    <li><a href="prijzen.html">Prijzen</a></li>
+    <li><a href="over-luca.html" style="color:var(--gold);">Over LUCA</a></li>
+    <li><a href="locatie.html">Bezoek</a></li>
+  </ul>
+  <div class="nav__right">
+    <button class="nav__lang">NL</button><span style="color:var(--cream);opacity:0.3">·</span><button class="nav__lang">EN</button>
+    <a href="reserve.html" class="nav__cta">Boek nu</a>
+  </div>
+</nav>
+
+<section class="page-hero">
+  <div class="page-hero__bg"></div>
+  <div class="page-hero__veil"></div>
+  <div class="page-hero__content">
+    <p class="page-hero__eyebrow">Over LUCA · Amsterdam</p>
+    <h1 class="page-hero__title">Een huiskamer<br><em>voor je</em><br>welzijn.</h1>
+    <p class="page-hero__sub">Geen wellnessfranchise. Geen instructies. Geen poespas. Gewoon een plek waar je even niets hoeft — en dat is precies het punt.</p>
+  </div>
+</section>
+
+<section class="about-story">
+  <div class="about-story__text">
+    <h2>Waar het<br><em>vandaan komt.</em></h2>
+    <p>LUCA begon als een idee: wat als je een ruimte kon maken die niets van je verwacht behalve dat je jezelf even goed behandelt? Geen lidmaatschap met minimumbezoeken, geen stempelkaart, geen instructies bij de ingang.</p>
+    <p>Gewoon: een sauna die warm aanvoelt, een ijsbad dat schoon is, een huiskamer met een bar waar je een sapje drinkt na afloop. En een therapeut die weet wanneer je moet praten en wanneer niet.</p>
+    <p>Het Cruquiuseiland was de vanzelfsprekende plek — opgewassen door het water, net buiten het drukke centrum, net ver genoeg om te voelen alsof je ergens anders bent.</p>
+  </div>
+  <div class="about-story__media">
+    <img src="assets/card-prive.webp" alt="LUCA interieur" loading="lazy">
+  </div>
+</section>
+
+<section class="about-quote">
+  <blockquote>"Wie zijn hoofd koel houdt,<br><em>zit waarschijnlijk</em><br>bij LUCA."</blockquote>
+  <cite>— Huisspreuk · LUCA Amsterdam</cite>
+</section>
+
+<section class="values-grid">
+  <h2>Wat we<br><em>beloven.</em></h2>
+  <div class="values">
+    <div class="value">
+      <div class="value__num">01</div>
+      <h3>Eerlijke prijs,<br>geen verrassingen.</h3>
+      <p>Je betaalt voor wat je gebruikt. Geen abonnementsdruk, geen opgespaarde credits die vervallen, geen verborgen kosten. Prijzen staan op de site.</p>
+    </div>
+    <div class="value">
+      <div class="value__num">02</div>
+      <h3>Ruimte voor<br>werkelijk ontspannen.</h3>
+      <p>Geen muzak, geen instructies, geen personeel dat je第三条 behandelt als klant. Je komt binnen, doet wat bij je past, en vertrekt beter dan je binnenkwam.</p>
+    </div>
+    <div class="value">
+      <div class="value__num">03</div>
+      <h3>Geen poespas,<br>wel kwaliteit.</h3>
+      <p>Houtgestookte sauna. Echt ijsbad, geen koude douche. Massages van therapeuten met echte opleiding. Alles wat werkt, niet wat luxe lijkt.</p>
+    </div>
+    <div class="value">
+      <div class="value__num">04</div>
+      <h3>De妇人 aan het<br>water is er voor jou.</h3>
+      <p>Onze openingstijden zijn breed — ochtend, middag, avond — zodat je kunt komen wanneer het jou uitkomt, niet wanneer het scheme zou willen.</p>
+    </div>
+    <div class="value">
+      <div class="value__num">05</div>
+      <h3>Alles is clean,<br>altijd.</h3>
+      <p>Handdoeken en slippers zijn bij elke sessie inbegrepen. Locker is verplicht. Lichaamscrème en deodorant staan klaar. Geen excuses.</p>
+    </div>
+    <div class="value">
+      <div class="value__num">06</div>
+      <h3>Spontaan is<br>altijd welkom.</h3>
+      <p>Geen reservering verplicht. Bel vooruit als je zeker wilt zijn van plek, maar kom gerust langs — we hebben altijd ruimte voor wie|langskomt.</p>
+    </div>
+  </div>
+</section>
+
+<section class="philosophy-section">
+  <div class="philosophy-inner">
+    <div>
+      <h2>Het ritueel<br><em>dat alles geneest.</em></h2>
+      <p>Warm. Koud. Rust. Herhaal. Dat is het hele systeem. Geen instructies, geen schema — alleen de cyclus die het lichaam kent en de geest rust geeft.</p>
+      <p>Twaalf minuten in de sauna. Drie minuten in het ijsbad. Twintig minuten in de huiskamer. De vierde ronde is helemaal van jou.</p>
+      <ul class="philosophy-list">
+        <li>Warmte opent de bloedvaten en ontspant de spieren</li>
+        <li>Koude vernauwt en刷新es het zenuwstelsel</li>
+        <li>Rust laat het lichaam verwerken wat het heeft meegemaakt</li>
+        <li>Herhaling bouwt het ritme op dat stress reduceert</li>
+        <li>De vierde ronde — die is voor jou, zonder doel</li>
+      </ul>
+    </div>
+    <div>
+      <img src="assets/card-sauna.webp" alt="Sauna ritueel" loading="lazy" style="width:100%;aspect-ratio:4/3;object-fit:cover;">
+    </div>
+  </div>
+</section>
+
+<section class="cta-strip">
+  <h2>Klaar om het<br>zelf te ervaren?</h2>
+  <p>Kom één keer langs. Voel het verschil. Daarna beslis je of het jouw ritme wordt.</p>
+  <div class="cta-strip__buttons">
+    <a href="reserve.html" class="btn-primary">Reserveer een sessie</a>
+    <a href="voorzieningen.html" class="btn-secondary">Bekijk voorzieningen</a>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer__inner">
+    <div class="footer__brand"><strong>LUCA</strong><p>Boutique wellness aan het water.<br>Amsterdam, sinds 2024.</p></div>
+    <div class="footer__col"><h4>Beleving</h4><ul><li><a href="reserve.html?service=sauna">Sauna & IJsbad</a></li><li><a href="reserve.html?service=massage">Massages</a></li><li><a href="reserve.html?service=prive">LUCA Privé</a></li><li><a href="prijzen.html">Memberships</a></li></ul></div>
+    <div class="footer__col"><h4>Huis</h4><ul><li><a href="over-luca.html">Over LUCA</a></li><li><a href="locatie.html">Locatie & openingstijden</a></li><li><a href="faq.html">Veelgestelde vragen</a></li><li><a href="huisregels.html">Huisregels</a></li></ul></div>
+    <div class="footer__col"><h4>Contact</h4><ul><li><a href="mailto:info@luca-amsterdam.nl">info@luca-amsterdam.nl</a></li><li><a href="tel:+31643711310">+31 6 43711310</a></li><li><a href="https://www.instagram.com/amsterdam.luca">Instagram</a></li></ul></div>
+  </div>
+  <div class="footer__bottom">© MMXXVI · LUCA Amsterdam · Aan het Cruquiuseiland</div>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>

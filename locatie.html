@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Locatie & Openingstijden · LUCA Amsterdam</title>
+<meta name="description" content="LUCA Amsterdam aan het Cruquiuseiland. Route, parkeren, openingstijden en contact.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Cormorant:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&family=Marcellus&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+.page-hero { position: relative; height: 56vh; min-height: 400px; display: flex; align-items: flex-end; padding: 0 0 72px; overflow: hidden; }
+.page-hero__bg { position: absolute; inset: 0; background: url('assets/hero-seedance.webm') center/cover no-repeat; filter: brightness(0.4); }
+.page-hero__veil { position: absolute; inset: 0; background: linear-gradient(to top, rgba(26,23,20,0.85) 0%, rgba(26,23,20,0.2) 60%, transparent 100%); }
+.page-hero__content { position: relative; z-index: 1; width: 100%; max-width: 1100px; margin: 0 auto; padding: 0 40px; }
+.page-hero__eyebrow { font-family: var(--ui); font-size: 11px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; }
+.page-hero__title { font-family: var(--display); font-size: clamp(48px, 7vw, 88px); font-style: italic; line-height: 0.95; color: var(--cream); font-weight: 400; }
+.page-hero__title em { color: var(--gold); font-style: normal; }
+.page-hero__sub { font-family: var(--body); font-size: 17px; color: rgba(246,243,236,0.7); margin-top: 20px; max-width: 480px; }
+.location-grid { padding: 80px 40px; max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; }
+.location-map { background: var(--dark-2); height: 400px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+.location-map iframe { width: 100%; height: 100%; border: none; }
+.location-map__overlay { position: absolute; inset: 0; background: rgba(26,23,20,0.85); display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: none; }
+.location-map__overlay p { font-family: var(--ui); font-size: 12px; letter-spacing: 0.15em; color: var(--gold); text-transform: uppercase; margin-top: 8px; }
+.location-info h2 { font-family: var(--display); font-size: clamp(32px, 3.5vw, 52px); font-style: italic; color: var(--dark); font-weight: 400; line-height: 1.1; }
+.location-info h2 em { color: var(--gold); font-style: normal; }
+.address-block { margin-top: 32px; }
+.address-block__street { font-family: var(--display); font-size: 28px; font-style: italic; color: var(--dark); }
+.address-block__city { font-family: var(--body); font-size: 15px; color: var(--mute); margin-top: 4px; }
+.directions-block { margin-top: 36px; display: flex; flex-direction: column; gap: 24px; }
+.direction-item { display: flex; gap: 20px; align-items: flex-start; }
+.direction-item__icon { width: 44px; height: 44px; background: var(--cream-2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+.direction-item__text h4 { font-family: var(--body); font-size: 16px; color: var(--dark); }
+.direction-item__text p { font-family: var(--body); font-size: 14px; color: var(--mute); margin-top: 4px; line-height: 1.6; }
+.hours-section { background: var(--cream-2); padding: 80px 40px; }
+.hours-inner { max-width: 1100px; margin: 0 auto; }
+.hours-section h2 { font-family: var(--display); font-size: clamp(28px, 3vw, 44px); font-style: italic; color: var(--dark); font-weight: 400; text-align: center; }
+.hours-section h2 em { color: var(--gold); font-style: normal; }
+.hours-table { margin-top: 48px; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 0; border: 1px solid var(--line); }
+.hours-row { display: flex; justify-content: space-between; padding: 18px 24px; border-bottom: 1px solid var(--line); font-family: var(--body); font-size: 15px; }
+.hours-row:last-child { border-bottom: none; }
+.hours-row__day { color: var(--dark); }
+.hours-row__time { color: var(--mute); }
+.hours-row--highlight { background: var(--dark-2); }
+.hours-row--highlight .hours-row__day { color: var(--gold); }
+.hours-row--highlight .hours-row__time { color: var(--cream); }
+.contact-section { padding: 80px 40px; max-width: 1100px; margin: 0 auto; }
+.contact-section h2 { font-family: var(--display); font-size: clamp(28px, 3vw, 44px); font-style: italic; color: var(--dark); font-weight: 400; }
+.contact-section h2 em { color: var(--gold); font-style: normal; }
+.contact-grid { margin-top: 40px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+.contact-card { border: 1px solid var(--line); padding: 28px; }
+.contact-card__icon { font-size: 28px; margin-bottom: 16px; }
+.contact-card__label { font-family: var(--ui); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--mute); margin-bottom: 8px; }
+.contact-card__value { font-family: var(--body); font-size: 17px; color: var(--dark); }
+.contact-card__value a { color: var(--dark); text-decoration: none; }
+.contact-card__value a:hover { color: var(--gold); }
+.cta-strip { background: var(--dark); padding: 100px 40px; text-align: center; display: flex; flex-direction: column; align-items: center; }
+.cta-strip h2 { font-family: var(--display); font-size: clamp(36px, 5vw, 72px); font-style: italic; color: var(--cream); font-weight: 400; line-height: 1; }
+.cta-strip p { font-family: var(--body); font-size: 17px; color: rgba(246,243,236,0.55); margin-top: 20px; max-width: 480px; }
+.cta-strip__buttons { margin-top: 36px; display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
+.btn-primary { background: var(--gold); color: var(--dark); font-family: var(--ui); font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; padding: 16px 36px; text-decoration: none; display: inline-block; }
+.btn-secondary { border: 1px solid rgba(246,243,236,0.3); color: var(--cream); font-family: var(--ui); font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; padding: 16px 36px; text-decoration: none; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="nav__logo">LUCA</a>
+  <ul class="nav__links">
+    <li><a href="voorzieningen.html">Voorzieningen</a></li>
+    <li><a href="prijzen.html">Prijzen</a></li>
+    <li><a href="over-luca.html">Over LUCA</a></li>
+    <li><a href="locatie.html" style="color:var(--gold);">Bezoek</a></li>
+  </ul>
+  <div class="nav__right">
+    <button class="nav__lang">NL</button><span style="color:var(--cream);opacity:0.3">·</span><button class="nav__lang">EN</button>
+    <a href="reserve.html" class="nav__cta">Boek nu</a>
+  </div>
+</nav>
+
+<section class="page-hero">
+  <div class="page-hero__bg"></div>
+  <div class="page-hero__veil"></div>
+  <div class="page-hero__content">
+    <p class="page-hero__eyebrow">Locatie · LUCA Amsterdam</p>
+    <h1 class="page-hero__title">Zeeburgerkade<br><em>1314.</em></h1>
+    <p class="page-hero__sub">Aan het water op het Cruquiuseiland. Opgewassen van de rest, dichtbij genoeg om te vinden.</p>
+  </div>
+</section>
+
+<section class="location-grid">
+  <div class="location-map">
+    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2436.073!2d4.9486!3d52.3735!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47c609c70000000%3A0x47c609c70000000!2sZeeburgerkade%2C%20Amsterdam!5e0!3m2!1snl!2snl!4v1" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="LUCA Amsterdam op de kaart"></iframe>
+  </div>
+  <div class="location-info">
+    <h2>Zo vind<br><em>je ons.</em></h2>
+    <div class="address-block">
+      <div class="address-block__street">Zeeburgerkade 1314-1316</div>
+      <div class="address-block__city">1019 VK Amsterdam · Cruquiuseiland</div>
+    </div>
+    <div class="directions-block">
+      <div class="direction-item">
+        <div class="direction-item__icon">🚇</div>
+        <div class="direction-item__text">
+          <h4>Metro</h4>
+          <p>Metro lijn 53 (Gaasperplas) of 54 (Gein) tot station Amsterdam Centraal, dan 15 minuten fietsen of tram 3 richting Flevopark.</p>
+        </div>
+      </div>
+      <div class="direction-item">
+        <div class="direction-item__icon">🚲</div>
+        <div class="direction-item__text">
+          <h4>Fiets</h4>
+          <p>15 minuten van Amsterdam Centraal via de Piet Heintunnel of de IJburgbrug. Fietspaden vrijliggend, rustige route langs het water.</p>
+        </div>
+      </div>
+      <div class="direction-item">
+        <div class="direction-item__icon">🚗</div>
+        <div class="direction-item__text">
+          <h4>Auto & Parkeren</h4>
+          <p>Gratis parkeren op het Cruquiuseiland. Q-Park of Stadhouderskade vermijden. Vanaf ring A10: afrit S114 (Zeeburgereiland), dan 5 minuten.</p>
+        </div>
+      </div>
+      <div class="direction-item">
+        <div class="direction-item__icon">🚶</div>
+        <div class="direction-item__text">
+          <h4>Te voet</h4>
+          <p>Vanaf het Muziekgebouw aan het IJ: 12 minuten langs het water via de Veerkade. Achterin het AZ-campus terrein, linkerrijtje.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="hours-section">
+  <div class="hours-inner">
+    <h2>Openingstijden<br><em>op een rij.</em></h2>
+    <div class="hours-table">
+      <div class="hours-row hours-row--highlight"><span class="hours-row__day">Maandag – Vrijdag</span><span class="hours-row__time">09:00 – 21:00</span></div>
+      <div class="hours-row"><span class="hours-row__day">Zaterdag</span><span class="hours-row__time">10:00 – 19:00</span></div>
+      <div class="hours-row"><span class="hours-row__day">Zondag</span><span class="hours-row__time">10:00 – 19:00</span></div>
+      <div class="hours-row"><span class="hours-row__day">Feestdagen</span><span class="hours-row__time">Op aanvraag · bel voor info</span></div>
+      <div class="hours-row" style="border:none;background:var(--cream);padding:20px 24px;">
+        <span style="font-family:var(--ui);font-size:12px;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);">Reserveren aanbevolen · Spontaan ook welkom</span><span></span>
+      </div>
+    </div>
+    <p style="font-family:var(--body);font-size:14px;color:var(--mute);margin-top:20px;text-align:center;">Op zaterdag en zondag gelden aangepaste openingstijden buiten het hoogseizoen (november – maart: 10:00 – 18:00).</p>
+  </div>
+</section>
+
+<section class="contact-section">
+  <h2>Contact<br><em>en reservering.</em></h2>
+  <div class="contact-grid">
+    <div class="contact-card">
+      <div class="contact-card__icon">📞</div>
+      <div class="contact-card__label">Telefoon</div>
+      <div class="contact-card__value"><a href="tel:+31643711310">+31 6 43711310</a></div>
+      <p style="font-family:var(--body);font-size:13px;color:var(--mute);margin-top:8px;">Bellen of appen — we reageren binnen 2 uur</p>
+    </div>
+    <div class="contact-card">
+      <div class="contact-card__icon">✉️</div>
+      <div class="contact-card__label">E-mail</div>
+      <div class="contact-card__value"><a href="mailto:info@luca-amsterdam.nl">info@luca-amsterdam.nl</a></div>
+      <p style="font-family:var(--body);font-size:13px;color:var(--mute);margin-top:8px;">Reactie binnen 24 uur op werkdagen</p>
+    </div>
+    <div class="contact-card">
+      <div class="contact-card__icon">📷</div>
+      <div class="contact-card__label">Instagram</div>
+      <div class="contact-card__value"><a href="https://www.instagram.com/amsterdam.luca" target="_blank">@amsterdam.luca</a></div>
+      <p style="font-family:var(--body);font-size:13px;color:var(--mute);margin-top:8px;">Behind the scenes, openingstijden, updates</p>
+    </div>
+  </div>
+</section>
+
+<section class="cta-strip">
+  <h2>Kom<br><em>langs.</em></h2>
+  <p>Reserveren hoeft niet — maar het scheelt wachten als het druk is. Bel, app of boek online.</p>
+  <div class="cta-strip__buttons">
+    <a href="reserve.html" class="btn-primary">Boek online</a>
+    <a href="tel:+31643711310" class="btn-secondary">Bel +31 6 43711310</a>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer__inner">
+    <div class="footer__brand"><strong>LUCA</strong><p>Boutique wellness aan het water.<br>Amsterdam, sinds 2024.</p></div>
+    <div class="footer__col"><h4>Beleving</h4><ul><li><a href="reserve.html?service=sauna">Sauna & IJsbad</a></li><li><a href="reserve.html?service=massage">Massages</a></li><li><a href="reserve.html?service=prive">LUCA Privé</a></li><li><a href="prijzen.html">Memberships</a></li></ul></div>
+    <div class="footer__col"><h4>Huis</h4><ul><li><a href="over-luca.html">Over LUCA</a></li><li><a href="locatie.html">Locatie & openingstijden</a></li><li><a href="faq.html">Veelgestelde vragen</a></li><li><a href="huisregels.html">Huisregels</a></li></ul></div>
+    <div class="footer__col"><h4>Contact</h4><ul><li><a href="mailto:info@luca-amsterdam.nl">info@luca-amsterdam.nl</a></li><li><a href="tel:+31643711310">+31 6 43711310</a></li><li><a href="https://www.instagram.com/amsterdam.luca">Instagram</a></li></ul></div>
+  </div>
+  <div class="footer__bottom">© MMXXVI · LUCA Amsterdam · Aan het Cruquiuseiland</div>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>

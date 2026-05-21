@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Veelgestelde vragen · LUCA Amsterdam</title>
+<meta name="description" content="Antwoorden op de meest gestelde vragen over LUCA Amsterdam — reserveren, annulering, kleding, parkeren en meer.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Cormorant:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&family=Marcellus&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+.page-hero { position: relative; height: 52vh; min-height: 380px; display: flex; align-items: flex-end; padding: 0 0 72px; overflow: hidden; }
+.page-hero__bg { position: absolute; inset: 0; background: url('assets/hero-seedance.webm') center/cover no-repeat; filter: brightness(0.4); }
+.page-hero__veil { position: absolute; inset: 0; background: linear-gradient(to top, rgba(26,23,20,0.85) 0%, rgba(26,23,20,0.2) 60%, transparent 100%); }
+.page-hero__content { position: relative; z-index: 1; width: 100%; max-width: 1100px; margin: 0 auto; padding: 0 40px; }
+.page-hero__eyebrow { font-family: var(--ui); font-size: 11px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; }
+.page-hero__title { font-family: var(--display); font-size: clamp(48px, 7vw, 88px); font-style: italic; line-height: 0.95; color: var(--cream); font-weight: 400; }
+.page-hero__title em { color: var(--gold); font-style: normal; }
+.page-hero__sub { font-family: var(--body); font-size: 17px; color: rgba(246,243,236,0.7); margin-top: 20px; max-width: 480px; }
+.faq-section { padding: 80px 40px; max-width: 1100px; margin: 0 auto; }
+.faq-section h2 { font-family: var(--display); font-size: clamp(28px, 3vw, 44px); font-style: italic; color: var(--dark); font-weight: 400; margin-bottom: 48px; }
+.faq-section h2 em { color: var(--gold); font-style: normal; }
+.faq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 80px; }
+.faq-item { border-top: 1px solid var(--line); padding: 28px 0; }
+.faq-item__q { font-family: var(--body); font-size: 17px; color: var(--dark); cursor: pointer; display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+.faq-item__q::after { content: '+'; font-family: var(--ui); font-size: 20px; color: var(--gold); flex-shrink: 0; transition: transform 0.3s; }
+.faq-item__q.open::after { transform: rotate(45deg); }
+.faq-item__a { font-family: var(--body); font-size: 15px; color: var(--mute); line-height: 1.7; margin-top: 14px; display: none; }
+.faq-item__a.show { display: block; }
+.tip-section { background: var(--cream-2); padding: 80px 40px; }
+.tip-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+.tip-inner h2 { font-family: var(--display); font-size: clamp(28px, 3vw, 44px); font-style: italic; color: var(--dark); font-weight: 400; line-height: 1.1; }
+.tip-inner h2 em { color: var(--gold); font-style: normal; }
+.tip-inner p { font-family: var(--body); font-size: 16px; color: var(--mute); margin-top: 16px; line-height: 1.7; }
+.tips-list { margin-top: 24px; display: flex; flex-direction: column; gap: 14px; }
+.tips-list li { font-family: var(--body); font-size: 15px; color: var(--dark); display: flex; gap: 14px; align-items: flex-start; }
+.tips-list li::before { content: '—'; color: var(--gold); flex-shrink: 0; }
+.cta-strip { background: var(--dark); padding: 100px 40px; text-align: center; display: flex; flex-direction: column; align-items: center; }
+.cta-strip h2 { font-family: var(--display); font-size: clamp(36px, 5vw, 72px); font-style: italic; color: var(--cream); font-weight: 400; line-height: 1; }
+.cta-strip p { font-family: var(--body); font-size: 17px; color: rgba(246,243,236,0.55); margin-top: 20px; max-width: 480px; }
+.cta-strip__buttons { margin-top: 36px; display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
+.btn-primary { background: var(--gold); color: var(--dark); font-family: var(--ui); font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; padding: 16px 36px; text-decoration: none; display: inline-block; }
+.btn-secondary { border: 1px solid rgba(246,243,236,0.3); color: var(--cream); font-family: var(--ui); font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; padding: 16px 36px; text-decoration: none; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="nav__logo">LUCA</a>
+  <ul class="nav__links">
+    <li><a href="voorzieningen.html">Voorzieningen</a></li>
+    <li><a href="prijzen.html">Prijzen</a></li>
+    <li><a href="over-luca.html">Over LUCA</a></li>
+    <li><a href="locatie.html">Bezoek</a></li>
+  </ul>
+  <div class="nav__right">
+    <button class="nav__lang">NL</button><span style="color:var(--cream);opacity:0.3">·</span><button class="nav__lang">EN</button>
+    <a href="reserve.html" class="nav__cta">Boek nu</a>
+  </div>
+</nav>
+
+<section class="page-hero">
+  <div class="page-hero__bg"></div>
+  <div class="page-hero__veil"></div>
+  <div class="page-hero__content">
+    <p class="page-hero__eyebrow">Veelgestelde vragen · LUCA</p>
+    <h1 class="page-hero__title">Alles wat je<br><em>wilt weten.</em></h1>
+    <p class="page-hero__sub">En anders zijn we te bereiken op +31 6 43711310 of info@luca-amsterdam.nl.</p>
+  </div>
+</section>
+
+<section class="faq-section">
+  <h2>Veelgestelde<br><em>vragen.</em></h2>
+  <div class="faq-grid">
+    <div class="faq-item">
+      <div class="faq-item__q" onclick="this.classList.toggle('open');this.nextElementSibling.classList.toggle('show')">Moet ik reserveren?</div>
+      <div class="faq-item__a">Nee, reserveren is niet verplicht. Je kunt spontaan langskomen en we hebben meestal plek. Wel raden we aan vooraf te boeken als je zeker wilt zijn van een plek — vooral in het weekend en op feestdagen. Je kunt online boeken of even bellen.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-item__q" onclick="this.classList.toggle('open');this.nextElementSibling.classList.toggle('show')">Kan ik annuleren?</div>
+      <div class="faq-item__a">Ja, tot 24 uur voor je afspraak kun je kosteloos annuleren. Bij annulering binnen 24 uur rekenen we 50% van de sessieprijs. Bij no-show wordt het volledige bedrag in rekening gebracht.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-item__q" onclick="this.classList.toggle('open');this.nextElementSibling.classList.toggle('show')">Wat moet ik meenemen?</div>
+      <div class="faq-item__a">Niets, eigenlijk. Handdoeken, slippers en een locker zijn bij elke sessie inbegrepen. Neem wel je zwurkleding mee (badkleding is overal verplicht). Douche- en lockerspullen zijn aanwezig, maar je mag eigen producten meenemen als je wilt.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-item__q" onclick="this.classList.toggle('open');this.nextElementSibling.classList.toggle('show')">Mag ik fotograferen?</div>
+      <div class="faq-item__a">BinnenLUCA is fotograferen toegestaan in de publieke ruimtes (huiskamer, kleedkamers buiten de relaxzone). Niet in de sauna- en ijsbadrruimtes zonder toestemming van medegasten. Onze therapeuten vragen we nooit te filmen.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-item__q" onclick="this.classList.toggle('open');this.nextElementSibling.classList.toggle('show')">Is LUCA ook voor mannen?</div>
+      <div class="faq-item__a">Jazeker. LUCA is open voor iedereen. De "ladies-only" avonden zijn specifieke avonden waarop we alleen vrouwen verwelkomen — alle andere tijdstippen zijn gemengd. Check de openingstijden voor precieze info.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-item__q" onclick="this.classList.toggle('open');this.nextElementSibling.classList.toggle('show')">Hoe werkt betaling?</div>
+      <div class="faq-item__a">Je betaalt na afloop van je bezoek, tenzij je een membership of rittenkaart hebt gekocht. Pin en contactloos zijn beide mogelijk. Voor bedrijven en membership-houdersfactureren we maandelijks.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-item__q" onclick="this.classList.toggle('open');this.nextElementSibling.classList.toggle('show')">Kan ik een massage combineren met sauna?</div>
+      <div class="faq-item__a">Absoluut. Veel gasten beginnen met een sauna-ijsbadrond en boeken daarna een massage — of andersom. Geef dit aan bij de boeking en we plannen het voor je in. Er is geen extra toeslag voor de combinatie.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-item__q" onclick="this.classList.toggle('open');this.nextElementSibling.classList.toggle('show')">Wat is de ladies-only avond?</div>
+      <div class="faq-item__a">Eens per week (zie openingstijden) hebben we een avond die specifiek voor vrouwen is. Geen heren toegang op die avond — wel voor alle andere tijdstippen. Check de actuele agenda of bel voor de eerstvolgende datum.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-item__q" onclick="this.classList.toggle('open');this.nextElementSibling.classList.toggle('show')">Is er een leeftijdsgrens?</div>
+      <div class="faq-item__a">Ja, gasten moeten minimaal 16 jaar zijn. Jongeren van 16–18 jaar zijn welkom in gezelschap van een volwassene. We verzoeken ouders om vooraf te informeren naar onze richtlijnen voor jonge gasten.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-item__q" onclick="this.classList.toggle('open');this.nextElementSibling.classList.toggle('show')">Hoe zit het met parkeren?</div>
+      <div class="faq-item__a">Er is gratis parkeren op het Cruquiuseiland direct rondom LUCA. De straat is vergunningsplichtig voor bewoners, maar bezoekers parkeren gratis op aangewezen plekken. Check bewegwijzering ter plaatse.</div>
+    </div>
+  </div>
+</section>
+
+<section class="tip-section">
+  <div class="tip-inner">
+    <div>
+      <h2>Eerste keer<br><em>bij LUCA?</em></h2>
+      <p>Geen zorgen — we begrijpen dat een eerste bezoek spannend kan zijn. Hier is wat je kunt verwachten.</p>
+      <ul class="tips-list">
+        <li>Kom 10 minuten eerder — we lopen je even rond als het je eerste keer is</li>
+        <li>Douchevoor je de sauna in gaat — dat is hygiëne én protocol</li>
+        <li>Neem een handdoek mee de sauna in — altijd op de bank</li>
+        <li>Hoofd omhoog, ogen dicht — en gewoon ademen</li>
+        <li>Geen haast. De huiskamer is er om te rusten tussen de ronden</li>
+        <li>Praten in de sauna is prima, maar hou het rustig</li>
+        <li>Na de sauna: ijsbad of koude douche — kies wat bij je past</li>
+        <li>Water drinken is verplicht na elke sauna-ronde</li>
+      </ul>
+    </div>
+    <div>
+      <img src="assets/card-ice.webp" alt="LUCA ijsbad" loading="lazy" style="width:100%;aspect-ratio:4/3;object-fit:cover;">
+    </div>
+  </div>
+</section>
+
+<section class="cta-strip">
+  <h2>Nog een vraag?<br><em>We horen het graag.</em></h2>
+  <p>Bel, app of mail — we reageren snel en persoonlijk.</p>
+  <div class="cta-strip__buttons">
+    <a href="reserve.html" class="btn-primary">Boek een sessie</a>
+    <a href="mailto:info@luca-amsterdam.nl" class="btn-secondary">Stuur een mail</a>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer__inner">
+    <div class="footer__brand"><strong>LUCA</strong><p>Boutique wellness aan het water.<br>Amsterdam, sinds 2024.</p></div>
+    <div class="footer__col"><h4>Beleving</h4><ul><li><a href="reserve.html?service=sauna">Sauna & IJsbad</a></li><li><a href="reserve.html?service=massage">Massages</a></li><li><a href="reserve.html?service=prive">LUCA Privé</a></li><li><a href="prijzen.html">Memberships</a></li></ul></div>
+    <div class="footer__col"><h4>Huis</h4><ul><li><a href="over-luca.html">Over LUCA</a></li><li><a href="locatie.html">Locatie & openingstijden</a></li><li><a href="faq.html">Veelgestelde vragen</a></li><li><a href="huisregels.html">Huisregels</a></li></ul></div>
+    <div class="footer__col"><h4>Contact</h4><ul><li><a href="mailto:info@luca-amsterdam.nl">info@luca-amsterdam.nl</a></li><li><a href="tel:+31643711310">+31 6 43711310</a></li><li><a href="https://www.instagram.com/amsterdam.luca">Instagram</a></li></ul></div>
+  </div>
+  <div class="footer__bottom">© MMXXVI · LUCA Amsterdam · Aan het Cruquiuseiland</div>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>

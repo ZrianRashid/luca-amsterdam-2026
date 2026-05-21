@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Huisregels · LUCA Amsterdam</title>
+<meta name="description" content="De huisregels van LUCA Amsterdam — hygiëne, gedrag, annulering en wat we van elke gast verwachten.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Cormorant:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&family=Marcellus&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+.page-hero { position: relative; height: 52vh; min-height: 380px; display: flex; align-items: flex-end; padding: 0 0 72px; overflow: hidden; }
+.page-hero__bg { position: absolute; inset: 0; background: url('assets/hero-seedance.webm') center/cover no-repeat; filter: brightness(0.4); }
+.page-hero__veil { position: absolute; inset: 0; background: linear-gradient(to top, rgba(26,23,20,0.85) 0%, rgba(26,23,20,0.2) 60%, transparent 100%); }
+.page-hero__content { position: relative; z-index: 1; width: 100%; max-width: 1100px; margin: 0 auto; padding: 0 40px; }
+.page-hero__eyebrow { font-family: var(--ui); font-size: 11px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; }
+.page-hero__title { font-family: var(--display); font-size: clamp(48px, 7vw, 88px); font-style: italic; line-height: 0.95; color: var(--cream); font-weight: 400; }
+.page-hero__title em { color: var(--gold); font-style: normal; }
+.page-hero__sub { font-family: var(--body); font-size: 17px; color: rgba(246,243,236,0.7); margin-top: 20px; max-width: 480px; }
+.rules-section { padding: 80px 40px; max-width: 900px; margin: 0 auto; }
+.rules-section h2 { font-family: var(--display); font-size: clamp(28px, 3vw, 44px); font-style: italic; color: var(--dark); font-weight: 400; margin-bottom: 40px; }
+.rules-section h2 em { color: var(--gold); font-style: normal; }
+.rule-block { margin-bottom: 48px; }
+.rule-block__heading { font-family: var(--ui); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--line); }
+.rule-block__text { font-family: var(--body); font-size: 16px; line-height: 1.8; color: var(--mute); }
+.rule-block__text strong { color: var(--dark); font-weight: 600; }
+.rule-list { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+.rule-list li { font-family: var(--body); font-size: 16px; color: var(--mute); display: flex; gap: 14px; line-height: 1.6; }
+.rule-list li::before { content: '—'; color: var(--gold); flex-shrink: 0; margin-top: 1px; }
+.warning-box { background: var(--dark-2); border-left: 3px solid var(--gold); padding: 28px 32px; margin: 48px 0; }
+.warning-box p { font-family: var(--body); font-size: 15px; color: rgba(246,243,236,0.75); line-height: 1.7; }
+.warning-box p strong { color: var(--gold); }
+.annulering-section { background: var(--cream-2); padding: 80px 40px; }
+.annulering-inner { max-width: 900px; margin: 0 auto; }
+.annulering-section h2 { font-family: var(--display); font-size: clamp(28px, 3vw, 44px); font-style: italic; color: var(--dark); font-weight: 400; margin-bottom: 32px; }
+.annulering-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.annulering-card { background: white; border: 1px solid var(--line); padding: 28px; }
+.annulering-card__time { font-family: var(--ui); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--mute); margin-bottom: 10px; }
+.annulering-card__price { font-family: var(--display); font-size: 28px; font-style: italic; color: var(--dark); margin-bottom: 8px; }
+.annulering-card__note { font-family: var(--body); font-size: 14px; color: var(--mute); }
+.annulering-card__price--free { color: #3a7d44; }
+.annulering-card__price--half { color: #b07d2a; }
+.annulering-card__price--full { color: #8b2e2e; }
+.contact-section { padding: 80px 40px; max-width: 900px; margin: 0 auto; text-align: center; }
+.contact-section h2 { font-family: var(--display); font-size: clamp(28px, 3vw, 44px); font-style: italic; color: var(--dark); font-weight: 400; }
+.contact-section h2 em { color: var(--gold); font-style: normal; }
+.contact-section p { font-family: var(--body); font-size: 16px; color: var(--mute); margin-top: 16px; line-height: 1.7; }
+.contact-section a { display: inline-block; margin-top: 28px; background: var(--gold); color: var(--dark); font-family: var(--ui); font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; padding: 14px 32px; text-decoration: none; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="nav__logo">LUCA</a>
+  <ul class="nav__links">
+    <li><a href="voorzieningen.html">Voorzieningen</a></li>
+    <li><a href="prijzen.html">Prijzen</a></li>
+    <li><a href="over-luca.html">Over LUCA</a></li>
+    <li><a href="locatie.html">Bezoek</a></li>
+  </ul>
+  <div class="nav__right">
+    <button class="nav__lang">NL</button><span style="color:var(--cream);opacity:0.3">·</span><button class="nav__lang">EN</button>
+    <a href="reserve.html" class="nav__cta">Boek nu</a>
+  </div>
+</nav>
+
+<section class="page-hero">
+  <div class="page-hero__bg"></div>
+  <div class="page-hero__veil"></div>
+  <div class="page-hero__content">
+    <p class="page-hero__eyebrow">Huisregels · LUCA Amsterdam</p>
+    <h1 class="page-hero__title">Wat we<br><em>verwachten.</em></h1>
+    <p class="page-hero__sub">Een prettige ervaring voor iedereen begint met een paar eenvoudige afspraken.</p>
+  </div>
+</section>
+
+<section class="rules-section">
+  <h2>Hygiëne &<br><em>verzorging.</em></h2>
+
+  <div class="rule-block">
+    <div class="rule-block__heading">Douches</div>
+    <ul class="rule-list">
+      <li>Douchen is verplicht vóór je de sauna, het ijsbad of de stoombadruimte betreedt. Zonder uitzondering.</li>
+      <li>Gebruik zeep alleen in de daartoe aangewezen douches — niet in de handdouches bij de sauna-ingangen.</li>
+      <li>Verwijder alle make-up, bodylotion en parfum vóór je de sauna of het ijsbad betreedt. Dit is zowel voor je eigen gezondheid als voor de kwaliteit van de ruimte.</li>
+    </ul>
+  </div>
+
+  <div class="rule-block">
+    <div class="rule-block__heading">Kleding</div>
+    <ul class="rule-list">
+      <li>Badkleding is verplicht in alle ruimtes — sauna, ijsbad, stoombad en kleedkamers. Zwemkleding is toegestaan, maar niet verplicht.</li>
+      <li>In de sauna kun je ervoor kiezen je badkleding uit te laten — wikkel je handdoek om, dat is gebruikelijk en acceptabel.</li>
+      <li>Wikkel je handdoek altijd om op de sauna-bank. Geen blote huid direct op de bank.</li>
+      <li>Slippers zijn verplicht in de kleedkamers en naar de douches. In de sauna- en ijsbadrruimtes loop je op blote voeten (met uitzondering van de buitendouches).</li>
+    </ul>
+  </div>
+
+  <div class="rule-block">
+    <div class="rule-block__heading">Gezondheid</div>
+    <ul class="rule-list">
+      <li>Bij ziekteverschijnselen (koorts, verkoudheid, infecties) vragen we je niet te komen. Sauna en ijsbad zijn belasting voor het lichaam — wacht tot je volledig hersteld bent.</li>
+      <li>Overmatig alcohol- of drugsgebruik voor of tijdens je bezoek is niet toegestaan. Onze medewerkers mogen je de toegang weigeren als ze vermoeden dat je onder invloed bent.</li>
+      <li>Consult je arts als je hart- of vaatproblemen hebt, zwanger bent, of andere medische aandoeningen hebt die de sauna of het ijsbad riskant kunnen maken.</li>
+    </ul>
+  </div>
+
+  <div class="warning-box">
+    <p><strong>Bel openstaande wonden, actieve huidinfecties of aandoeningen die besmettelijk kunnen zijn:</strong> Kom in dat geval niet naar LUCA. Je brengt andere gasten in gevaar en we kunnen je de toegang weigeren.</p>
+  </div>
+
+  <h2>Gedrag &<br><em>sfeer.</em></h2>
+
+  <div class="rule-block">
+    <div class="rule-block__heading">RUST</div>
+    <ul class="rule-list">
+      <li>De sauna is een ruimte van stilte — spreek zacht of helemaal niet. Flarden van gesprek zijn acceptabel, maar hard praten, gillen of telefoneren is not done.</li>
+      <li>GSM-gebruik is niet toegestaan in de sauna, ijsbad en rustruimtes. Zet je telefoon op stil voordat je de kleedkamer uit loopt.</li>
+      <li>Gelach en gesprek zijn prima in de huiskamer — dat is er voor ontspanning in alle vormen.</li>
+    </ul>
+  </div>
+
+  <div class="rule-block">
+    <div class="rule-block__heading">Sociale omgang</div>
+    <ul class="rule-list">
+      <li>Respecteer de privacy van medegasten. Fotograferen van medegasten zonder toestemming is niet toegestaan.</li>
+      <li>Onze medewerkers en therapeuten zijn professionals — ongepast gedrag wordt niet getolereerd en leidt tot directe uitsluiting.</li>
+      <li>Racisme, seksisme, intimidatie of ander respectloos gedrag leidt tot directe uitsluiting zonder restitutie.</li>
+    </ul>
+  </div>
+
+  <div class="rule-block">
+    <div class="rule-block__heading">Ruilden en ritueel</div>
+    <ul class="rule-list">
+      <li>Ga niet in de sauna met natte badkleding — dat verhoogt de belasting op je lichaam onnodig.</li>
+      <li>Spring niet in het ijsbad — stap langzaam in en dompel je onder, dat is de bedoeling.</li>
+      <li>Ga niet direct na het ijsbad weer in de sauna — rust eerst 10–15 minuten in de huiskamer.</li>
+      <li>Hydrateer: drink water na elke sauna-ronde. Geen alcohol in de sauna- of ijsbadruimte.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="annulering-section">
+  <div class="annulering-inner">
+    <h2>Annulerings-<br><em>beleid.</em></h2>
+    <div class="annulering-grid">
+      <div class="annulering-card">
+        <div class="annulering-card__time">24+ uur vooraf</div>
+        <div class="annulering-card__price annulering-card__price--free">Gratis</div>
+        <div class="annulering-card__note">Volledige restitutie van je reservering. Geen kosten.</div>
+      </div>
+      <div class="annulering-card">
+        <div class="annulering-card__time">Binnen 24 uur</div>
+        <div class="annulering-card__price annulering-card__price--half">50%</div>
+        <div class="annulering-card__note">50% van de gereserveerde sessieprijs wordt in rekening gebracht.</div>
+      </div>
+      <div class="annulering-card">
+        <div class="annulering-card__time">No-show</div>
+        <div class="annulering-card__price annulering-card__price--full">100%</div>
+        <div class="annulering-card__note">Volledige sessieprijs wordt in rekening gebracht bij niet verschijnen.</div>
+      </div>
+    </div>
+    <p style="font-family:var(--body);font-size:14px;color:var(--mute);margin-top:24px;text-align:center;">Het annululeringsbeleid is van toepassing op alle gereserveerde diensten, inclusief massages en LUCA Privé-boekingen. Membership-houders volgen een afzonderlijk contract.</p>
+  </div>
+</section>
+
+<section class="contact-section">
+  <h2>Vragen over<br><em>de huisregels?</em></h2>
+  <p>Bel of mail ons — we leggen graag uit hoe het werkt bij LUCA.<br>+31 6 43711310 · info@luca-amsterdam.nl</p>
+  <a href="reserve.html">Ik ga akkoord · Nu boeken</a>
+</section>
+
+<footer class="footer">
+  <div class="footer__inner">
+    <div class="footer__brand"><strong>LUCA</strong><p>Boutique wellness aan het water.<br>Amsterdam, sinds 2024.</p></div>
+    <div class="footer__col"><h4>Beleving</h4><ul><li><a href="reserve.html?service=sauna">Sauna & IJsbad</a></li><li><a href="reserve.html?service=massage">Massages</a></li><li><a href="reserve.html?service=prive">LUCA Privé</a></li><li><a href="prijzen.html">Memberships</a></li></ul></div>
+    <div class="footer__col"><h4>Huis</h4><ul><li><a href="over-luca.html">Over LUCA</a></li><li><a href="locatie.html">Locatie & openingstijden</a></li><li><a href="faq.html">Veelgestelde vragen</a></li><li><a href="huisregels.html">Huisregels</a></li></ul></div>
+    <div class="footer__col"><h4>Contact</h4><ul><li><a href="mailto:info@luca-amsterdam.nl">info@luca-amsterdam.nl</a></li><li><a href="tel:+31643711310">+31 6 43711310</a></li><li><a href="https://www.instagram.com/amsterdam.luca">Instagram</a></li></ul></div>
+  </div>
+  <div class="footer__bottom">© MMXXVI · LUCA Amsterdam · Aan het Cruquiuseiland</div>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>

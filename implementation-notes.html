@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LUCA Amsterdam — Implementation Notes</title>
+<style>
+:root{--bg:#0f0f12;--surface:#1a1a1f;--text:#e8e6e1;--muted:#888;--accent:#c9a86c;--line:#2a2a30;--font:system-ui,-apple-system,sans-serif}
+*{box-sizing:border-box;margin:0}
+body{background:var(--bg);color:var(--text);font-family:var(--font);line-height:1.6;max-width:900px;margin:0 auto;padding:40px 20px}
+h1{font-size:32px;margin-bottom:8px;color:var(--accent)}
+h2{font-size:20px;margin-top:32px;margin-bottom:12px;color:var(--accent);border-bottom:1px solid var(--line);padding-bottom:8px}
+h3{font-size:16px;margin-top:20px;margin-bottom:8px;color:var(--text)}
+p,li{color:var(--muted);margin-bottom:8px}
+ul{margin-left:20px;margin-bottom:16px}
+li{margin-bottom:6px}
+code{background:var(--surface);padding:2px 8px;border-radius:4px;font-size:13px;color:var(--accent)}
+.decision{background:var(--surface);border-left:3px solid var(--accent);padding:16px 20px;margin:16px 0;border-radius:0 8px 8px 0}
+.decision h3{margin-top:0;color:var(--text)}
+.tradeoff{background:var(--surface);border-left:3px solid #c96c6c;padding:16px 20px;margin:16px 0;border-radius:0 8px 8px 0}
+.tradeoff h3{margin-top:0;color:#c96c6c}
+</style>
+</head>
+<body>
+
+<h1>LUCA Amsterdam — Implementation Notes</h1>
+<p style="color:var(--muted);margin-bottom:32px">Build decisions, tradeoffs, and fixes applied during the rebuild.</p>
+
+<h2>1. Booking Page — Critical Fix</h2>
+
+<div class="decision">
+<h3>Problem: Category/service buttons not clickable</h3>
+<p>Users could not select categories or individual services in the booking flow. The UI rendered correctly but clicks had no effect.</p>
+</div>
+
+<div class="decision">
+<h3>Root Cause: Babel standalone caching</h3>
+<p>The booking page used <code>&lt;script type="text/babel"&gt;</code> with Babel Standalone to compile JSX in the browser. Babel caches compiled output aggressively — adding <code>?v=2</code> to the URL did not bust Babel's internal compilation cache. Users with stale compiled JSX saw broken event handlers.</p>
+</div>
+
+<div class="decision">
+<h3>Fix: Pre-compile JSX to plain JavaScript</h3>
+<p>Installed <code>@babel/cli</code> and <code>@babel/preset-react</code> locally, then compiled:</p>
+<ul>
+<li><code>reserve.jsx</code> → <code>reserve.js</code></li>
+<li><code>tweaks-panel.jsx</code> → <code>tweaks-panel.js</code></li>
+<li><code>reserve-tweaks.jsx</code> → <code>reserve-tweaks.js</code></li>
+</ul>
+<p>Updated <code>reserve.html</code> to load compiled JS instead of Babel. Switched from React development build to production build for faster loading.</p>
+</div>
+
+<div class="tradeoff">
+<h3>Tradeoff: No more runtime JSX editing</h3>
+<p>With Babel gone, you cannot edit <code>.jsx</code> files and see changes instantly in the browser. You must run <code>npx babel file.jsx --out-file file.js</code> after each edit. This is the correct tradeoff for production — runtime compilation is a dev convenience, not a production pattern.</p>
+</div>
+
+<h2>2. Asset Optimization</h2>
+
+<div class="decision">
+<h3>Image format: PNG → WebP</h3>
+<p>Converted all card images from PNG (~2MB each) to WebP (~65KB each) using <code>cwebp -q 85</code>. <strong>96–97% size reduction.</strong> WebP has broad browser support (95%+). No fallback needed for this audience.</p>
+</div>
+
+<div class="decision">
+<h3>Motion format: GIF → WebM VP9</h3>
+<p>Converted card hover videos and hero from GIF/MP4 to WebM VP9. <strong>3–40x size reduction</strong> (6MB GIF → 150KB WebM). Used <code>ffmpeg -c:v libvpx-vp9 -b:v 0 -crf 30</code> for quality/size balance.</p>
+</div>
+
+<div class="tradeoff">
+<h3>Tradeoff: Safari < 14 lacks WebM</h3>
+<p>WebM VP9 is not supported in Safari versions before 14 (released Sep 2020). LUCA's audience is Amsterdam wellness seekers — likely on modern iPhones. Added MP4 fallback for hero video only; card videos are decorative and degrade gracefully to static WebP images.</p>
+</div>
+
+<h2>3. i18n Architecture</h2>
+
+<div class="decision">
+<h3>Translation system: Single-file key-value dictionary</h3>
+<p>All translations live in <code>i18n.js</code> as a flat dictionary with dot-notation keys (<code>r.cat.sauna</code>, <code>r.svc.sauna60.name</code>). The <code>t(key, lang)</code> function does a simple lookup with fallback to the key itself.</p>
+</div>
+
+<div class="decision">
+<h3>Cache busting strategy</h3>
+<p>Added <code>?v=3</code> to all JS file references in HTML. Babel JSX caches aggressively — this was the only way to force fresh compilation. Now that Babel is gone, <code>?v=3</code> still ensures browsers fetch the new compiled JS.</p>
+</div>
+
+<div class="tradeoff">
+<h3>Tradeoff: No translation management UI</h3>
+<p>Adding/editing translations requires editing <code>i18n.js</code> directly. For LUCA's scale (2 languages, ~200 keys), this is manageable. A CMS or translation platform would be overkill.</p>
+</div>
+
+<h2>4. Homepage Hero Video</h2>
+
+<div class="decision">
+<h3>Dual-source video element</h3>
+<p>Hero uses <code>&lt;video&gt;</code> with two <code>&lt;source&gt;</code> children:</p>
+<ul>
+<li><code>assets/hero-hero.mp4</code> (H.264) — primary, broad compatibility</li>
+<li><code>assets/hero-woman-sauna-new.webm</code> (VP9) — smaller, modern browsers</li>
+</ul>
+<p>Browser picks the first format it supports. MP4 first ensures Safari always works.</p>
+</div>
+
+<h2>5. Subpage Consistency</h2>
+
+<div class="decision">
+<h3>Navigation pattern</h3>
+<p>All 8 HTML pages share the same nav structure:</p>
+<ul>
+<li>Logo → <code>index.html</code></li>
+<li>Links: Voorzieningen, Prijzen, Over LUCA, Bezoek (Locatie)</li>
+<li>Language toggle: NL / EN</li>
+<li>CTA: "Boek nu" → <code>reserve.html</code></li>
+</ul>
+<p>Only <code>index.html</code> and <code>reserve.html</code> load <code>i18n.js</code> — subpages are Dutch-only for now. Adding i18n to subpages requires loading <code>i18n.js</code> + adding <code>data-i18n</code> attributes to all text elements.</p>
+</div>
+
+<h2>6. Deployment</h2>
+
+<div class="decision">
+<h3>Primary: Netlify</h3>
+<p>Site ID: <code>709fe3d7-c91b-4627-b95c-05a110f0a398</code></p>
+<p>URL: <code>https://endearing-granita-7b7cb7.netlify.app</code></p>
+<p>Team: BirdsAI (via <code>accountSlug</code>)</p>
+</div>
+
+<div class="decision">
+<h3>Fallback: GitHub Pages</h3>
+<p>Repo: <code>ZrianRashid/luca-amsterdam-2026</code></p>
+<p>URL: <code>https://zrianrashid.github.io/luca-amsterdam-2026/</code></p>
+<p>Branch: <code>gh-pages</code></p>
+</div>
+
+<div class="tradeoff">
+<h3>Tradeoff: Netlify subdomain vs custom domain</h3>
+<p>Currently on Netlify's auto-generated subdomain (<code>endearing-granita-7b7cb7.netlify.app</code>). For production, add a custom domain (e.g., <code>book.luca-amsterdam.nl</code>) in Netlify settings. This requires DNS A/CNAME records from LUCA's domain provider.</p>
+</div>
+
+<h2>7. OnlineAfspraken.nl Integration (Future)</h2>
+
+<div class="decision">
+<h3>Current state: Demo mode</h3>
+<p>The booking flow collects all data (service, date, time, guests, contact info) but does NOT submit to OnlineAfspraken.nl. The "Confirm" button shows a success message but creates no real booking.</p>
+</div>
+
+<div class="decision">
+<h3>Integration path</h3>
+<p>OnlineAfspraken.nl has a REST API + webhooks. To go live:</p>
+<ol>
+<li>Get API credentials from LUCA's OnlineAfspraken portal</li>
+<li>Create a serverless function (Netlify Function) to proxy API calls</li>
+<li>On confirmation, POST to <code>/appointments</code> with customer + service data</li>
+<li>Handle webhook callbacks for booking confirmations/cancellations</li>
+</ol>
+</div>
+
+<h2>8. Files Changed</h2>
+
+<ul>
+<li><code>reserve.html</code> — Removed Babel, load compiled JS</li>
+<li><code>reserve.js</code> — NEW: Compiled from reserve.jsx</li>
+<li><code>tweaks-panel.js</code> — NEW: Compiled from tweaks-panel.jsx</li>
+<li><code>reserve-tweaks.js</code> — NEW: Compiled from reserve-tweaks.jsx</li>
+<li><code>i18n.js</code> — Added cache-busting (?v=3)</li>
+<li><code>implementation-notes.html</code> — NEW: This file</li>
+</ul>
+
+<h2>9. Verification Checklist</h2>
+
+<ul>
+<li>[ ] Booking page loads without console errors</li>
+<li>[ ] Category buttons open/close correctly</li>
+<li>[ ] Individual services can be selected</li>
+<li>[ ] Price updates in sidebar when service changes</li>
+<li>[ ] Date picker shows availability dots</li>
+<li>[ ] Time slots appear after date selection</li>
+<li>[ ] Guest count can be adjusted</li>
+<li>[ ] Add-ons can be toggled</li>
+<li>[ ] Form validation works</li>
+<li>[ ] Confirmation step shows summary</li>
+<li>[ ] Homepage hero video plays</li>
+<li>[ ] All subpages load</li>
+<li>[ ] Navigation works between pages</li>
+<li>[ ] Language toggle works (NL/EN)</li>
+<li>[ ] Mobile responsive</li>
+</ul>
+
+</body>
+</html>

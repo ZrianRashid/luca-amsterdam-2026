@@ -1,0 +1,47 @@
+name: campaigns-tick
+
+# Polls /api/campaigns-tick every 5 minutes to ship queued campaign sends.
+# This replaces Netlify Scheduled Functions so we have a real run history,
+# survive Netlify plan changes, and keep cron config in the repo.
+#
+# Required GitHub Actions secret: CAMPAIGNS_TICK_SECRET (must match the Netlify env of the same name)
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:   # allows manual smoke-run from the Actions tab
+
+concurrency:
+  group: campaigns-tick
+  cancel-in-progress: false
+
+jobs:
+  tick:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Call campaigns-tick
+        env:
+          ENDPOINT: https://endearing-granita-7b7cb7.netlify.app/.netlify/functions/campaigns-tick
+          TICK_SECRET: ${{ secrets.CAMPAIGNS_TICK_SECRET }}
+        run: |
+          set -euo pipefail
+          if [ -z "${TICK_SECRET}" ]; then
+            echo "::error::CAMPAIGNS_TICK_SECRET is not configured in GitHub Actions secrets"
+            exit 1
+          fi
+          RESPONSE=$(mktemp)
+          STATUS=$(curl -sS -o "$RESPONSE" -w '%{http_code}' \
+            -X POST \
+            -H "Authorization: Bearer ${TICK_SECRET}" \
+            -H 'Content-Type: application/json' \
+            -d '{}' \
+            "$ENDPOINT")
+          echo "HTTP $STATUS"
+          echo "Body:"
+          cat "$RESPONSE"
+          echo
+          if [ "$STATUS" -ge 400 ]; then
+            echo "::error::campaigns-tick returned $STATUS"
+            exit 1
+          fi
